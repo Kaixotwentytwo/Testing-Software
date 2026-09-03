@@ -1,0 +1,99 @@
+:root {
+    --mm: 1.2rem;
+    --brs: 10px;
+
+    font-family: sans-serif;
+}
+
+body {
+    background-color: #333;
+    font-size: 1rem;
+    color: white;
+    padding: var(--mm);
+}
+
+.bigT {font-size: 2rem;}
+.okT {font-size: 1.6rem;}
+
+.flex {display: flex;}
+.row {flex-direction: row;}
+.column {flex-direction: column;}
+.gap {gap: var(--mm)}
+
+button {
+    transition: .2s cubic-bezier(0.39, 0.575, 0.565, 1);
+    border-radius: var(--brs);
+    padding: calc(var(--mm)/2);
+}
+
+button:hover {
+    background-color: cadetblue;
+}
+
+button:active {
+    translate: 0 4px;
+    background-color: darkcyan;
+}
+
+.userInput {
+    height: 1ch;
+    padding: 8px;
+    border-radius: var(--brs);
+    field-sizing: content;
+    min-width: 25ch;
+    min-height: 1ch;
+    height: fit-content;
+}
+
+.smallInput {
+    font-size: 16px;
+    text-align: center;
+    height: 1ch;
+    padding: 4px;
+    border-radius: var(--brs);
+    field-sizing: content;
+    min-width: 10ch;
+    width: 100%;
+    min-height: 1ch;
+    height: fit-content;
+}
+
+.resultBlock {
+    filter: brightness(0.9);
+    min-width: 25ch;
+    max-width: 100%;
+    min-height: 3ch;
+    height: fit-content;
+    field-sizing: content;
+    resize: vertical;
+    background: #222;
+    padding: var(--mm);
+    border-radius: var(--brs);
+    color: rgba(255, 255, 255);
+    line-height: 1.25;
+}
+
+.block {
+    gap: var(--mm);
+}
+
+#first {
+    gap: var(--mm);
+}
+
+#userinputlab1 {
+    width: 100%;
+    gap:var(--mm);
+}
+
+#userinputlab1 > div {
+    max-width: 25ch;
+}
+
+#userinputlab1 > div > span {
+    text-align: center;
+}
+
+#unitTestBlock {
+    gap: var(--mm);
+}

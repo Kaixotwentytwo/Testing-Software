@@ -1,0 +1,48 @@
+<!Document>
+<html>
+	<head>
+		<title>Лабораторные работы</title>
+		<link rel="stylesheet" href="style.css">
+
+		<script defer src="lab1.js"></script>
+		<script src="general.js"></script>
+	</head>
+	<body>		
+		<div class="flex row" id="first">
+			<div class="block_1 block column flex">
+
+				<span class="bigT">Задача 1</span>
+
+				<div class="flex row" id="userinputlab1">
+					<div class="flex column">
+						<span class="okT">Максимальное количество чисел</span>
+						<input type="text" id="nmax" class="smallInput" value="1000">
+					</div>
+					<div class="flex column">
+						<span class="okT">Максимальный модуль числа</span>
+						<input type="text" id="mmax" class="smallInput" value="10^9">
+					</div>
+				</div>
+
+				<input class="userInput okT" type="text" id="lab1_input">
+				<div id="result1" class="resultBlock okT"></div>
+
+				<button class="okT" id="test">Подтвердить</button>
+				<button id="button_1" class="okT">Провести юнит-тесты</button>
+
+				<a class="okT" style="color: white;" href="hub.html">⊲ Вернуться к списку лабораторных</a>
+			</div>
+
+			<div class="flex column" id="unitTestBlock">
+				
+			</div>
+
+			<template id="unittest1">
+				<div class="block gap flex column">
+					<span class="okT"></span>
+					<div class="resultBlock okT"></div>
+				</div>
+			</template>
+		</div>
+	</body>
+</html>
