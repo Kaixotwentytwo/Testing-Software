@@ -191,7 +191,7 @@ let unitTest = () => {
         addText(console, `\nВозникли ли какие-либо ошибки? - `);
         addText(console, failure?'Да.':'Нет!',
         failure?colors.darkTheme.error : colors.darkTheme.success);
-        addText(console, `\nДолжны ли быть? - `)
+        addText(console, `\nДолжны ли? - `)
         addText(console, item.expected?'Нет':'Абсолютно',
         item.expected?colors.darkTheme.success : colors.darkTheme.error);
         if (failure) {
