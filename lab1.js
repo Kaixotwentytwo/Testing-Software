@@ -1,6 +1,14 @@
 // ограничения
 let n_max = 1000; // кол-во чисел
 let module_max = 10**9; // максимальный модуль числа
+var extended = document.getElementById('extendedInfo')?.checked??false;
+document.getElementById('extendedInfo')?.addEventListener('change', (el) => {
+    extended = document.getElementById('extendedInfo')?.checked??false;
+    // if (extended) {document.querySelectorAll('.extended').forEach(element=>{element.style.display = 'inline';})}
+    // else {document.querySelectorAll('.extended').forEach(element=>{element.style.display = 'none';})}
+    if (extended) {document.querySelectorAll('.extended').forEach(element=>{element.setAttribute('shown','')})}
+    else {document.querySelectorAll('.extended').forEach(element=>{element.removeAttribute('shown')})}
+});
 
 // получение данных с блока
 let inputBlock = document.querySelector('input#lab1_input');
@@ -42,6 +50,7 @@ function userInputsTest() {
 
 function calculateSort(module, amount) {
     // получение массива. разделение пробелом
+    extended = document.getElementById('extendedInfo')?.checked??false;
     let inputBlockData = inputBlock?.value?.trim().split(' ');
 
     // Находим первый элемент, который нарушает хотя бы одно условие
@@ -67,13 +76,13 @@ function calculateSort(module, amount) {
             addText(result, inputBlock?.value.trim()??'', colors.darkTheme.warn);
             addText(result, '\nКол-во перестановок: ');
             addText(result, bubbleSort(inputBlock?.value?.trim().split(' ')??[]), colors.darkTheme.blue);
-            addText(result, '\nСортировка пузырьком: ');
-            addText(result, '  '+bubble.join(' '), colors.darkTheme.blue);
-            addText(result, '\nВстроенный метод сортировки: ');
-            addText(result, embedded.join(' '), colors.darkTheme.blueD);
-            addText(result, '\nСрабатывают ли сортировки идентично? ');
+            addText(result, '\nСортировка пузырьком: ', 'white', false);
+            addText(result, bubble.join(' '), colors.darkTheme.blue, false);
+            addText(result, '\nВстроенный метод сортировки: ', 'white', true);
+            addText(result, embedded.join(' '), colors.darkTheme.blueD, true);
+            addText(result, '\nСрабатывают ли сортировки идентично? ', 'white', true);
             addText(result, (arraysEqual(embedded, bubble) ? 'Да!' : "Нет :("),
-            arraysEqual(embedded, bubble) ? colors.darkTheme.success : colors.darkTheme.error);
+            arraysEqual(embedded, bubble) ? colors.darkTheme.success : colors.darkTheme.error, true);
         } else {
             console.log('\n');
             console.log('%cEverything is OK', 'color: green;');
@@ -98,10 +107,11 @@ function calculateSort(module, amount) {
     }
 }
 
-function addText(parent=document.body, text='', color='#ffffff', newStroke=false) {
+function addText(parent=document.body, text='', color='#ffffff', extendedOnly=false) {
     let el = document.createElement('span');
     el.style.color = color;
     el.innerText = text;
+    if (extendedOnly===true) {el.classList.add('extended')}
     parent.appendChild(el);
 }
 
@@ -175,8 +185,8 @@ let unitTest = () => {
 
         addText(console, `Тестовый массив: `);
         addText(console, item.array, colors.darkTheme.warn);
-        addText(console, `\nКол-во перестановок: `);
-        addText(console, swaps, colors.darkTheme.blue);
+        addText(console, `\nКол-во перестановок: `, 'white', true);
+        addText(console, swaps, colors.darkTheme.blue, true);
         addText(console, `\nСортировка пузырьком: `);
         addText(console, bubble.join(' '), colors.darkTheme.blue);
         addText(console, `\nВстроенный метод сортировки: `);
@@ -184,18 +194,18 @@ let unitTest = () => {
         addText(console, `\nРезультаты идентичны? - `);
         addText(console, arraysEqual(embedded, bubble)?'Да':'Нет',
         arraysEqual(embedded, bubble)?colors.darkTheme.success:colors.darkTheme.error);
-        addText(console, `\nМаксимальное количество чисел: `);
-        addText(console, item.n, colors.darkTheme.warn);
-        addText(console, `\nМаксимальный модуль числа: `);
-        addText(console, item.module, colors.darkTheme.warn);
-        addText(console, `\nВозникли ли какие-либо ошибки? - `);
+        addText(console, `\nМаксимальное количество чисел: `, 'white', true);
+        addText(console, item.n, colors.darkTheme.warn, true);
+        addText(console, `\nМаксимальный модуль числа: `, 'white', true);
+        addText(console, item.module, colors.darkTheme.warn, true);
+        addText(console, `\nВозникли ли какие-либо ошибки? - `, 'white', true);
         addText(console, failure?'Да.':'Нет!',
-        failure?colors.darkTheme.error : colors.darkTheme.success);
-        addText(console, `\nДолжны ли? - `)
+        failure?colors.darkTheme.error : colors.darkTheme.success, true);
+        addText(console, `\nДолжны ли? - `, 'white', true)
         addText(console, item.expected?'Нет':'Абсолютно',
-        item.expected?colors.darkTheme.success : colors.darkTheme.error);
+        item.expected?colors.darkTheme.success : colors.darkTheme.error, true);
         if (failure) {
-            addText(console, `\nВ чём ошибка: `); 
+            addText(console, `\nВ чём ошибка: `, 'white', true); 
             let message = '';
             if ((bigNumber != undefined) && (size > item.n)) {
                 message = 'Какое-то из чисел слишком \nбольшое, а также чисел слишком много';} 
@@ -203,7 +213,7 @@ let unitTest = () => {
                 if (bigNumber != undefined) {message = 'Какое-то из чисел слишком больше'};
                 if (size > item.n) {message = 'Представлено слишком много чисел'};}
 
-            addText(console, message, colors.darkTheme.error)
+            addText(console, message, colors.darkTheme.error, true)
         }
         block.appendChild(clone);
     })
