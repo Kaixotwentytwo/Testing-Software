@@ -1,6 +1,6 @@
 // ограничения
-let n_max = 1000; // кол-во чисел
-let module_max = 10**9; // максимальный модуль числа
+let n_current = 1000; // кол-во чисел
+let module_current = 10**9; // максимальный модуль числа
 var extended = document.getElementById('extendedInfo')?.checked??false;
 document.getElementById('extendedInfo')?.addEventListener('change', (el) => {
     extended = document.getElementById('extendedInfo')?.checked??false;
@@ -14,12 +14,12 @@ document.getElementById('extendedInfo')?.addEventListener('change', (el) => {
 let inputBlock = document.querySelector('input#lab1_input');
 
 // вычисление при вводе значений
-inputBlock?.addEventListener('change', () => {userInputsTest(); calculateSort(module_max, n_max); userInputsTest();});
+inputBlock?.addEventListener('change', () => {userInputsTest(); calculateSort(module_current, n_current); userInputsTest();});
 
 const unitTestButton = document.getElementById('button_1');
 const maxModuleBlock = document.getElementById('mmax');
 const maxAmountBlock = document.getElementById('nmax');
-document.getElementById('test')?.addEventListener('click', () => {userInputsTest(); calculateSort(module_max, n_max); userInputsTest();});
+document.getElementById('test')?.addEventListener('click', () => {userInputsTest(); calculateSort(module_current, n_current); userInputsTest();});
 
 function userInputsTest() {
     let value = maxModuleBlock?.value;
@@ -29,13 +29,13 @@ function userInputsTest() {
             let index = value.indexOf('^');
             let left = value.slice(0, index);
             let right = value.slice(index+1);
-            module_max = (+left)**(+right);
+            module_current = (+left)**(+right);
         } else {
             // error
             let result = document.getElementById('result1'); result.innerHTML='';
             addText(result, `ERROR: Значению "Максимальный модуль числа" необходимо передать число (либо степень в виде 10^3) (Передано: ${value})`, colors.darkTheme.error)
         }
-    } else {module_max = +maxModuleBlock?.value;}
+    } else {module_current = +maxModuleBlock?.value;}
 
     let valueMax = maxAmountBlock?.value;
     // if string of smth
@@ -43,7 +43,7 @@ function userInputsTest() {
         let result = document.getElementById('result1'); result.innerHTML='';
         addText(result, `ERROR: Ожидалось число (Передано: ${valueMax})`, colors.darkTheme.error)
     } else {
-        n_max = valueMax;
+        n_current = valueMax;
     }
 
 }
@@ -51,7 +51,7 @@ function userInputsTest() {
 function calculateSort(module, amount) {
     // получение массива. разделение пробелом
     extended = document.getElementById('extendedInfo')?.checked??false;
-    let inputBlockData = inputBlock?.value?.trim().replaceAll(',',' ').split(' ');
+    let inputBlockData = inputBlock?.value?.trim().replaceAll(',',' ').replaceAll('.',' ').replaceAll('-','').split(' ');
 
     // Находим первый элемент, который нарушает хотя бы одно условие
     inputBlockData = inputBlockData.filter(item => item != '').map(item => +item);
@@ -69,14 +69,14 @@ function calculateSort(module, amount) {
             let result = document.getElementById('result1'); result.innerHTML='';
 
             const embedded = inputBlockData ? [...inputBlockData].sort((a, b) => a - b) : [];
-            let inputBlockData2 = inputBlock?.value?.trim().replaceAll(',',' ').split(' ');
+            let inputBlockData2 = inputBlock?.value?.trim().replaceAll(',',' ').replaceAll('.',' ').replaceAll('-','').split(' ');
             inputBlockData2 = inputBlockData2.filter(item => item != '').map(item => +item);
             const swaps = bubbleSort(inputBlockData2??[], false);
             const bubble = bubbleSort(inputBlockData??[], true);
 
             addText(result, 'Исправное выполнение.', colors.darkTheme.success);
-            addText(result, '\nВвод пользователя: ', colors.darkTheme.standart);
-            addText(result, inputBlock?.value.trim()??'', colors.darkTheme.warn);
+            addText(result, '\nВвод пользователя: ', colors.darkTheme.standart, true);
+            addText(result, inputBlock?.value.trim()??'', colors.darkTheme.warn, true);
             addText(result, '\nКол-во перестановок: ');
             addText(result, swaps, colors.darkTheme.blue);
             addText(result, '\nСортировка пузырьком: ', 'white', false);
@@ -85,7 +85,7 @@ function calculateSort(module, amount) {
             addText(result, embedded.join(' '), colors.darkTheme.blueD, true);
             addText(result, '\nСрабатывают ли сортировки идентично? ', 'white', true);
             addText(result, (arraysEqual(embedded, bubble) ? 'Да!' : "Нет :("),
-            arraysEqual(embedded, bubble) ? colors.darkTheme.success : colors.darkTheme.error, true);
+            (arraysEqual(embedded, bubble) ? colors.darkTheme.success : colors.darkTheme.error), true);
         } else {
             console.log('\n');
             console.log('%cEverything is OK', 'color: green;');
@@ -99,9 +99,9 @@ function calculateSort(module, amount) {
         if (document.getElementById('result1')!==null) {
             let result = document.getElementById('result1'); result.innerHTML='';
 
-            if (bigFailure) {addText(result, `ERROR: Найдено слишком большое число (${failureItem})`, colors.darkTheme.error)}
-            if (typeFailure) {addText(result, `ERROR: Передано не число (${failureItem})`, colors.darkTheme.error)}
-            if (inputBlockData.length > amount) {addText(result, `ERROR: Введено слишком много чисел (${inputBlockData.length})`, colors.darkTheme.error)}
+            if (bigFailure) {addText(result, `ERROR: Найдено слишком большое число (${failureItem})\n`, colors.darkTheme.error)}
+            if (typeFailure) {addText(result, `ERROR: Передано не число (${failureItem})\n`, colors.darkTheme.error)}
+            if (inputBlockData.length > amount) {addText(result, `ERROR: Введено слишком много чисел (${inputBlockData.length})\n`, colors.darkTheme.error)}
         } else {
             if (bigFailure) {console.error(`ERROR: Найдено слишком большое число (${failureItem})`)}
             if (typeFailure) {console.error(`ERROR: Передано не число (${failureItem})`)}
@@ -147,17 +147,20 @@ function bubbleSort(array, returnMassive = false, size = array.length) {
 }
 
 let unitTest = () => {
-    let unitTestSet = new Set();
-    unitTestSet.add({number:1, array:'3 1 2 3', n:1000, module:10**9, expected: true});
-    unitTestSet.add({number:2, array:'2 2 1', n:1000, module:10**9, expected: true});
-    unitTestSet.add({number:3, array:'4 1 5 3', n:1000, module:10**9, expected: true});
-    unitTestSet.add({number:4, array:'5 4 3 2 1 0', n: 6, module:10**9, expected: true});
-    unitTestSet.add({number:5, array:'5 4 3 2 1 0', n: 5, module:10**9, expected:false});
-    unitTestSet.add({number:6, array:'26 09 1', n: 7, module:10**9, expected:true});
-    unitTestSet.add({number:7, array:'0 4 9 8 10', n: 8, module:10, expected:true});
-    unitTestSet.add({number:8, array:'0 4 9 8 10', n: 8, module:9, expected:false});
-    unitTestSet.add({number:9, array:'0 0 0 0', n: 5, module:50, expected:true});
-    unitTestSet.add({number:10, array:'0 1 2 3 4 5', n: 5, module:1, expected:false});
+
+    let unitTestSet = new Set([
+        {number:1, array:'3 1 2 3', n:1000, module:10**9, expected: true},
+        {number:2, array:'2 2 1', n:1000, module:10**9, expected: true},
+        {number:3, array:'4 1 5 3', n:1000, module:10**9, expected: true},
+        {number:4, array:'5 4 3 2 1 0', n: 6, module:10**9, expected: true},
+        {number:5, array:'5 4 3 2 1 0', n: 5, module:10**9, expected:false},
+        {number:6, array:'26 09 1', n: 7, module:10**9, expected:true},
+        {number:7, array:'0 4 9 8 10', n: 8, module:10, expected:true},
+        {number:8, array:'0 4 9 8 10', n: 8, module:9, expected:false},
+        {number:9, array:'0 0 0 0', n: 5, module:50, expected:true},
+        {number:10, array:'0 1 2 3 4 5', n: 5, module:1, expected:false}
+    ]);
+
 
     unitTestBlock.innerHTML = '';
     unitTestSet.forEach(item => {
