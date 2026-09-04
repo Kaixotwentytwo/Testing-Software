@@ -51,7 +51,7 @@ function userInputsTest() {
 function calculateSort(module, amount) {
     // получение массива. разделение пробелом
     extended = document.getElementById('extendedInfo')?.checked??false;
-    let inputBlockData = inputBlock?.value?.trim().split(' ');
+    let inputBlockData = inputBlock?.value?.trim().replaceAll(',',' ').split(' ');
 
     // Находим первый элемент, который нарушает хотя бы одно условие
     inputBlockData = inputBlockData.filter(item => item != '').map(item => +item);
@@ -69,13 +69,16 @@ function calculateSort(module, amount) {
             let result = document.getElementById('result1'); result.innerHTML='';
 
             const embedded = inputBlockData ? [...inputBlockData].sort((a, b) => a - b) : [];
+            let inputBlockData2 = inputBlock?.value?.trim().replaceAll(',',' ').split(' ');
+            inputBlockData2 = inputBlockData2.filter(item => item != '').map(item => +item);
+            const swaps = bubbleSort(inputBlockData2??[], false);
             const bubble = bubbleSort(inputBlockData??[], true);
 
             addText(result, 'Исправное выполнение.', colors.darkTheme.success);
             addText(result, '\nВвод пользователя: ', colors.darkTheme.standart);
             addText(result, inputBlock?.value.trim()??'', colors.darkTheme.warn);
             addText(result, '\nКол-во перестановок: ');
-            addText(result, bubbleSort(inputBlock?.value?.trim().split(' ')??[]), colors.darkTheme.blue);
+            addText(result, swaps, colors.darkTheme.blue);
             addText(result, '\nСортировка пузырьком: ', 'white', false);
             addText(result, bubble.join(' '), colors.darkTheme.blue, false);
             addText(result, '\nВстроенный метод сортировки: ', 'white', true);
