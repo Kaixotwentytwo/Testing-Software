@@ -13,7 +13,7 @@ body {
 }
 
 .bigT {font-size: 2rem;}
-.okT {font-size: 1.6rem;}
+.okT {font-size: 1.44rem;}
 
 .flex {display: flex;}
 .row {flex-direction: row;}
@@ -61,9 +61,8 @@ button:active {
 .resultBlock {
     filter: brightness(0.9);
     min-width: 25ch;
-    max-width: 100%;
+    max-width: 40ch;
     min-height: 3ch;
-    height: fit-content;
     field-sizing: content;
     resize: vertical;
     background: #222;
@@ -77,8 +76,12 @@ button:active {
     gap: var(--mm);
 }
 
+#result1 {
+    width: max-content;
+}
+
 #first {
-    gap: var(--mm);
+    gap: calc(var(--mm) * 1.5);
 }
 
 #userinputlab1 {
@@ -88,6 +91,7 @@ button:active {
 
 #userinputlab1 > div {
     max-width: 25ch;
+    justify-content: space-between;
 }
 
 #userinputlab1 > div > span {
@@ -96,4 +100,27 @@ button:active {
 
 #unitTestBlock {
     gap: var(--mm);
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+#unitTestBlock .resultBlock {
+    width: fit-content;
+    max-width: max-content;
+}
+
+.extended:not([shown]) {
+  display: none;
+}
+
+#checkerfirst {
+    padding: 10px;
+    background: #222;
+    font-size:1.2rem;
+    width: fit-content;
+    margin-top: var(--mm);
+    border-radius: var(--brs);
 }
