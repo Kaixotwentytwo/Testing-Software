@@ -2,27 +2,30 @@
 let n_current = 1000; // кол-во чисел
 let module_current = 10**9; // максимальный модуль числа
 var extended = document.getElementById('extendedInfo')?.checked??false;
+
+// дополнительная информация о результатах тестирования
 document.getElementById('extendedInfo')?.addEventListener('change', (el) => {
     extended = document.getElementById('extendedInfo')?.checked??false;
-    // if (extended) {document.querySelectorAll('.extended').forEach(element=>{element.style.display = 'inline';})}
-    // else {document.querySelectorAll('.extended').forEach(element=>{element.style.display = 'none';})}
     if (extended) {document.querySelectorAll('.extended').forEach(element=>{element.setAttribute('shown','')})}
     else {document.querySelectorAll('.extended').forEach(element=>{element.removeAttribute('shown')})}
 });
 
-// получение данных с блока
+// получение данных инпута с интерфейса (массив чисел, n, модуль)
 let inputBlock = document.querySelector('input#lab1_input');
 
 // вычисление при вводе значений
 inputBlock?.addEventListener('change', () => {userInputsTest(); calculateSort(module_current, n_current); userInputsTest();});
 
+// работа интерфейса
 const unitTestButton = document.getElementById('button_1');
 const maxModuleBlock = document.getElementById('mmax');
 const maxAmountBlock = document.getElementById('nmax');
 document.getElementById('test')?.addEventListener('click', () => {userInputsTest(); calculateSort(module_current, n_current); userInputsTest();});
 
+// функция которая запускает все юнит тесты
 function userInputsTest() {
     let value = maxModuleBlock?.value;
+    // проверка на ошибки
     if (isNaN(Number(maxModuleBlock?.value))) {
         // if there's ^ or smth
         if (value.indexOf('^') !== -1) {
@@ -42,12 +45,11 @@ function userInputsTest() {
     if (isNaN(Number(maxAmountBlock?.value))) {
         let result = document.getElementById('result1'); result.innerHTML='';
         addText(result, `ERROR: Ожидалось число (Передано: ${valueMax})`, colors.darkTheme.error)
-    } else {
-        n_current = valueMax;
-    }
+    } else {n_current = valueMax;}
 
 }
 
+// стандартное вычисление с использованием данных с интерфейса
 function calculateSort(module, amount) {
     // получение массива. разделение пробелом
     extended = document.getElementById('extendedInfo')?.checked??false;
@@ -56,11 +58,10 @@ function calculateSort(module, amount) {
     // Находим первый элемент, который нарушает хотя бы одно условие
     inputBlockData = inputBlockData.filter(item => item != '').map(item => +item);
     const failureItem = inputBlockData.find(item => item > module || isNaN(Number(item)));
-    // var bigFailure = failureItem !== undefined && failureItem < module;
-    var bigFailure = failureItem > module;
+    var bigFailure = failureItem > module || failureItem < module;
     var typeFailure = failureItem !== undefined && isNaN(Number(failureItem));
 
-    // если больше 1000 цифр или найдено слишком большое число
+    // если больше чем n или найдено слишком большое(маленькое) число
     if ((inputBlockData?.length <= amount ? inputBlockData?.length : 0)
         && !bigFailure && !typeFailure) {
 
@@ -68,12 +69,14 @@ function calculateSort(module, amount) {
         if (document.getElementById('result1')!==null) {
             let result = document.getElementById('result1'); result.innerHTML='';
 
+            // вычисления с массивами
             const embedded = inputBlockData ? [...inputBlockData].sort((a, b) => a - b) : [];
             let inputBlockData2 = inputBlock?.value?.trim().replaceAll(',',' ').replaceAll('.',' ').replaceAll('-','').split(' ');
             inputBlockData2 = inputBlockData2.filter(item => item != '').map(item => +item);
             const swaps = bubbleSort(inputBlockData2??[], false);
             const bubble = bubbleSort(inputBlockData??[], true);
 
+            // выведение результата в интерфейсе
             addText(result, 'Исправное выполнение.', colors.darkTheme.success);
             addText(result, '\nВвод пользователя: ', colors.darkTheme.standart, true);
             addText(result, inputBlock?.value.trim()??'', colors.darkTheme.warn, true);
@@ -87,6 +90,7 @@ function calculateSort(module, amount) {
             addText(result, (arraysEqual(embedded, bubble) ? 'Да!' : "Нет :("),
             (arraysEqual(embedded, bubble) ? colors.darkTheme.success : colors.darkTheme.error), true);
         } else {
+            // если блока в интерфейсе нет, результат выведется в консоль
             console.log('\n');
             console.log('%cEverything is OK', 'color: green;');
             console.log(`User Input: %c${inputBlock?.value.trim()??''}`, 'font-weight: 800; color: blue');
@@ -94,6 +98,7 @@ function calculateSort(module, amount) {
             console.log(`Result Array: %c${bubbleSort(inputBlockData??'', true).join(' ')}`, 'font-weight: 800; color: darkgreen;')
         }
     } else {
+        // выведение ошибок в зависимости от типа ошибки
         if (bigFailure) console.log(bigFailure)
         // ERROR
         if (document.getElementById('result1')!==null) {
@@ -110,6 +115,7 @@ function calculateSort(module, amount) {
     }
 }
 
+// функций добавления текста в интерфейс
 function addText(parent=document.body, text='', color='#ffffff', extendedOnly=false) {
     let el = document.createElement('span');
     el.style.color = color;
@@ -118,14 +124,17 @@ function addText(parent=document.body, text='', color='#ffffff', extendedOnly=fa
     parent.appendChild(el);
 }
 
+// функция глубокого сравнения массивов
 const arraysEqual = (a, b) => 
   a.length === b.length && a.every((val, index) => val === b[index])
 
+// тестовая функция для быстрого перевода строки в массив
 function trans(string) {
     let lmassive = string?.trim().split(' ');
     return lmassive??''
 }
 
+// функция сортировки пузырьком
 function bubbleSort(array, returnMassive = false, size = array.length) {
     let newArray = array;
     let swap_counter = 0;
@@ -146,8 +155,10 @@ function bubbleSort(array, returnMassive = false, size = array.length) {
     return returnMassive ? newArray : swap_counter;
 }
 
+// функция для отрисовки юнит тестов в интерфейс
 let unitTest = () => {
 
+    // объект со значениями для тестов
     let unitTestSet = new Set([
         {number:1, array:'3 1 2 3', n:1000, module:10**9, expected: true},
         {number:2, array:'2 2 1', n:1000, module:10**9, expected: true},
@@ -161,7 +172,7 @@ let unitTest = () => {
         {number:10, array:'0 1 2 3 4 5', n: 5, module:1, expected:false}
     ]);
 
-
+    // создание 10-ти блоков и добавление текста
     unitTestBlock.innerHTML = '';
     unitTestSet.forEach(item => {
         const temp = document.getElementById('unittest1');
