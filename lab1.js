@@ -52,7 +52,7 @@ function calculateSort(module, amount) {
     let inputBlockData = inputBlock?.value?.trim().replaceAll(',','.').replaceAll('-','').split(' ');
 
     // Находим первый элемент, который нарушает хотя бы одно условие
-    inputBlockData = inputBlockData.filter(item => item != '');
+    inputBlockData = inputBlockData.filter(item => item != '').map(item => Math.round(item));
 
     let failure;
     try {
