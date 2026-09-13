@@ -59,11 +59,11 @@ function calculateSort(module, amount) {
         inputBlockData.forEach((item)=>{
             let number = Number(item);
 
-            const maximum = number > module;
+            const maximum = Math.abs(number) > Math.abs(module);
             const nan = isNaN(number);
 
             failure = {failure: undefined, reason: null}
-            if (maximum) {failure = {item: item, reason: 'abovemax', text: "Найдено слишком большое число"};throw new Error(failure.text);}
+            if (maximum) {failure = {item: item, reason: 'abovemax', text: "Найдено число, превышающее модуль"};throw new Error(failure.text);}
             else if (nan) {failure = {item: item, reason: 'nan', text: "Передано не число"};throw new Error(failure.text);}
         });
     } catch (error) {
