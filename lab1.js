@@ -49,7 +49,7 @@ function userInputsTest() {
 function calculateSort(module, amount) {
     // получение массива. разделение пробелом
     extended = document.getElementById('extendedInfo')?.checked??false;
-    let inputBlockData = inputBlock?.value?.trim().replaceAll(',',' ').replaceAll('.',' ').replaceAll('-','').split(' ');
+    let inputBlockData = inputBlock?.value?.trim().replaceAll(',','.').replaceAll('-','').split(' ');
 
     // Находим первый элемент, который нарушает хотя бы одно условие
     inputBlockData = inputBlockData.filter(item => item != '');
