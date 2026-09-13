@@ -1,59 +1,63 @@
 // ограничения
 let n_current = 1000; // кол-во чисел
-let module_current = 10**9; // максимальный модуль числа
-var extended = document.getElementById('extendedInfo')?.checked??false;
+let module_current = 10**9; // текущий заданный модуль числа
+var extended = document.getElementById('extendedInfo')?.checked??false; // вывод доп инфо
+// чекбокс отображения дополнительной информации
 document.getElementById('extendedInfo')?.addEventListener('change', (el) => {
     extended = document.getElementById('extendedInfo')?.checked??false;
     if (extended) {document.querySelectorAll('.extended').forEach(element=>{element.setAttribute('shown','')})}
     else {document.querySelectorAll('.extended').forEach(element=>{element.removeAttribute('shown')})}
 });
 
-// получение данных с блока
+// поле в которое пользователь вводит массив
 let inputBlock = document.querySelector('input#lab1_input');
 
 // вычисление при вводе значений
 inputBlock?.addEventListener('change', () => {userInputsTest(); calculateSort(module_current, n_current); userInputsTest();});
 
+// кнопки
 const unitTestButton = document.getElementById('button_1');
 const maxModuleBlock = document.getElementById('mmax');
 const maxAmountBlock = document.getElementById('nmax');
 document.getElementById('test')?.addEventListener('click', () => {userInputsTest(); calculateSort(module_current, n_current); userInputsTest();});
 
+// функция обрабатывающая ввод пользователя
 function userInputsTest() {
     let value = maxModuleBlock?.value;
+    // обработка поля модуля
     if (isNaN(Number(maxModuleBlock?.value))) {
-        // if there's ^ or smth
+        // если пользовател ввёл ^
         if (value.indexOf('^') !== -1) {
             let index = value.indexOf('^');
             let left = value.slice(0, index);
             let right = value.slice(index+1);
             module_current = (+left)**(+right);
         } else {
-            // error
+            // ошибка
             let result = document.getElementById('result1'); result.innerHTML='';
             addText(result, `ERROR: Значению "Максимальный модуль числа" необходимо передать число (либо степень в виде 10^3) (Передано: ${value})`, colors.darkTheme.error)
         }
     } else {module_current = +maxModuleBlock?.value;}
 
+    // обработка поля n - количества чисел
     let valueMax = maxAmountBlock?.value;
-    // if string of smth
     if (isNaN(Number(maxAmountBlock?.value))) {
         let result = document.getElementById('result1'); result.innerHTML='';
         addText(result, `ERROR: Ожидалось число (Передано: ${valueMax})`, colors.darkTheme.error)
-    } else {
-        n_current = valueMax;
-    }
-
+    } else 
+        {n_current = valueMax;}
 }
 
+// сортировка массив и отображение результата
 function calculateSort(module, amount) {
-    // получение массива. разделение пробелом
     extended = document.getElementById('extendedInfo')?.checked??false;
-    let inputBlockData = inputBlock?.value?.trim().replaceAll(',','.').replaceAll('-','').split(' ');
+    // получение массива. разделение пробелом
+    let inputBlockData = inputBlock?.value?.trim().replaceAll(',','.').split(' ');
 
-    // Находим первый элемент, который нарушает хотя бы одно условие
+    // удаление пустых элементов, округление чисел
     inputBlockData = inputBlockData.filter(item => item != '').map(item => Math.round(item));
 
+    // поиск ошибок
     let failure;
     try {
         inputBlockData.forEach((item)=>{
@@ -67,6 +71,7 @@ function calculateSort(module, amount) {
             else if (nan) {failure = {item: item, reason: 'nan', text: "Передано не число"};throw new Error(failure.text);}
         });
     } catch (error) {
+        // вывод ошибок в "консоль"
         if (document.getElementById('result1')!==null) {
             let result = document.getElementById('result1');
             let sliced = false;
@@ -85,7 +90,7 @@ function calculateSort(module, amount) {
         }
     }
 
-    // если больше 1000 цифр или найдено слишком большое число
+    // если нет никаких ошибок
     if ((inputBlockData?.length <= amount ? inputBlockData?.length : 0) && !failure.item) {
 
         // вывод результата
@@ -121,7 +126,7 @@ function calculateSort(module, amount) {
             console.log(`Result Array: %c${bubbleSort(inputBlockData??'', true).join(' ')}`, 'font-weight: 800; color: darkgreen;')
         }
     } else {
-        // ERROR
+        // вывод ошибок
         if (document.getElementById('result1')!==null) {
             let result = document.getElementById('result1');
             let sliced = false;
@@ -141,6 +146,7 @@ function calculateSort(module, amount) {
     }
 }
 
+// функция добавления текста в "консоль"
 function addText(parent=document.body, text='', color='#ffffff', extendedOnly=false) {
     let el = document.createElement('span');
     el.style.color = color;
@@ -149,14 +155,17 @@ function addText(parent=document.body, text='', color='#ffffff', extendedOnly=fa
     parent.appendChild(el);
 }
 
+// глубокое сравнение массивов
 const arraysEqual = (a, b) => 
   a.length === b.length && a.every((val, index) => val === b[index])
 
+// для дебаггинга
 function trans(string) {
     let lmassive = string?.trim().split(' ');
     return lmassive??''
 }
 
+// сортировка пузырьком
 function bubbleSort(array, returnMassive = false, size = array.length) {
     let newArray = array;
     let swap_counter = 0;
@@ -177,8 +186,10 @@ function bubbleSort(array, returnMassive = false, size = array.length) {
     return returnMassive ? newArray : swap_counter;
 }
 
+// функция, запускающая юнит тесты
 let unitTest = () => {
 
+    // массив данных для тестов
     let unitTestSet = new Set([
         {number:1, array:'3 1 2 3', n:1000, module:10**9, expected: true},
         {number:2, array:'2 2 1', n:1000, module:10**9, expected: true},
@@ -192,6 +203,7 @@ let unitTest = () => {
         {number:10, array:'0 1 2 3 4 5', n: 5, module:1, expected:false}
     ]);
 
+    // отображение блоков с результатами
     unitTestBlock.innerHTML = '';
     unitTestSet.forEach(item => {
         const temp = document.getElementById('unittest1');
