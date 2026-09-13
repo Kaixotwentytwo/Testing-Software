@@ -91,7 +91,7 @@ function calculateSort(module, amount) {
     }
 
     // если нет никаких ошибок
-    if ((inputBlockData?.length <= amount ? inputBlockData?.length : 0) && !failure.item) {
+    if ((inputBlockData?.length <= amount ? inputBlockData?.length : 0) && failure.item===undefined) {
 
         // вывод результата
         if (document.getElementById('result1')!==null) {
