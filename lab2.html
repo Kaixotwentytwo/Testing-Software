@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторная работа №2</title>
+    <link rel="stylesheet" href="lab2.css">
+    <script defer src="lab2.js"></script>
+    <script defer src="general.js"></script>
+</head>
+<body style="background-color: #333; color: white;" class="flex column gap">
+    <a href="index.html" class="okT" style="color: white;padding: 8px;">← Вернуться к списку лабораторных</a>
+    <div class="flex column gap">
+        <div class="flex row okT gap2" data-max="999999" data-min="-999999" id="maxDataBlock">
+            <div class="column flex gap">
+                <div class="group flex row gap" id="sum">
+                    <div class="flex column">
+                        <span>Слагаемое</span>
+                        <input type="number" name="" id="sum1" class="okT" max="1" placeholder="0">
+                    </div>
+                    <div class="flex column">
+                        <span>Слагаемое</span>
+                        <input type="number" name="" id="sum2" class="okT" max="1" placeholder="0">
+                    </div>
+                </div>
+                <button class="okT" id="butt_sum">Вычислить сумму</button>
+                <div class="result" id="res_sum"></div>
+            </div>
+            <div class="column flex gap">
+                <div class="group flex row gap" id="multi">
+                    <div class="flex column">
+                        <span>Множитель</span>
+                        <input type="number" name="" id="multi1" class="okT" max="1" placeholder="0">
+                    </div>
+                    <div class="flex column">
+                        <span>Множитель</span>
+                        <input type="number" name="" id="multi2" class="okT" max="1" placeholder="0">
+                    </div>
+                </div>
+                <button class="okT" id="butt_mul">Вычислить произведение</button>
+                <div class="result" id="res_mul"></div>
+            </div>
+            <div class="column flex gap">
+                <div class="group flex column gap">
+                    <div class="flex column">
+                        <span>Факториал</span>
+                        <input type="number" name="" id="fac" class="okT" max="1" placeholder="0!">
+                    </div>
+                    <button class="okT" id="butt_fac">Вычислить факториал</button>
+                    <div class="result" id="res_fac"></div>
+                </div>
+            </div>
+        </div>
+        <div id="unitTestBlock" class="flex row wrap gap aic">
+            <button id="unit" class="okT">Провести юнит-тесты</button>
+        </div>
+    </div>
+
+    <template id="unittest">
+        <div class="block flex column">
+            <span class="okT"></span>
+            <div class="result okT"></div>
+        </div>
+    </template>
+
+    <template id="loader-template">
+        <div id="loader" class="loader"></div>
+    </template>
+</body>
+</html>
