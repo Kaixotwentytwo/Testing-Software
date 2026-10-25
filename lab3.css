@@ -44,16 +44,21 @@ button {
     padding: calc(var(--mm)/2);
     height: fit-content;
     font-size: var(--mm);
+    background: hsl(240, 40%, 85%);
     box-shadow: 4px 4px 4px hsl(0, 0%, 10%);
 }
 
+#clearCanvas {
+    background: hsl(0, 35%, 55%);;
+}
+
 button:hover {
-    background-color: cadetblue;
+    background-color: cadetblue !important;
 }
 
 button:active {
     translate: 0 4px;
-    background-color: darkcyan;
+    background-color: darkcyan !important;
 }
 
 pre {
