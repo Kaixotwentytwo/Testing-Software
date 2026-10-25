@@ -3,12 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Лабораторная работа №3</title>
     <link rel="stylesheet" href="lab3.css">
     <script defer src="https://cdn.jsdelivr.net/npm/fabric@latest/dist/index.min.js"></script>
     <script defer src="lab3.js"></script>
 </head>
 <body>
-    <canvas id="graph" width="800" height="800"></canvas>
+    <div class="flex row wrap" id="wrapper">
+        <canvas id="graph" width="600" height="600"></canvas>
+
+        <pre><code>
+<c>// проверка на ввод пользователя</c>
+<bl>function</bl> <gr>userInputsTest</gr><y>()</y> {
+<c>// если N это строка</c>
+    <y>if</y> (<bk>(</bk><gr>element1</gr>.<bl>value</bl><bk>)</bk>.<gr>isNaN</gr><y>()</y> <r>==</r> <v>true</v>) {
+        <c>// если используется символ
+           возведения в степень</c>
+        <y>if</y> (value.<bk>indexOf</bk><y>(</y><gr>'^'</gr><y>)</y> <r>!==</r> <bk>-1</bk>) {
+            <c>// преобразует в степень числа</c>
+        } <y>else</y> {
+            <r>// error</r>
+        }
+    } <y>else</y> { <c>// success</c> }
+
+<c>// Если M это тоже строка</c>
+    <y>if</y> (<bk>(</bk><gr>element2</gr>.<bl>value</bl><bk>)</bk>.<gr>isNaN</gr><y>()</y> <r>==</r> <v>true</v>) {
+        <r>// error</r>
+    } <y>else</y> { <c>// success</c> }
+}
+        </code></pre>
+
+        <div id="buttonsBlock" class="flex wrap">
+            <button id="initCanvas">Стартовый граф</button>
+            <button id="clearCanvas">Очистить поле</button>
+            <button id="createNode">Добавить вершину</button>
+        </div>
+    </div>
 </body>
 </html>

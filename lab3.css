@@ -13,3 +13,65 @@ body {
 }
 .bigT {font-size: 2rem}
 .okT {font-size: 1.44rem;}
+.flex {display: flex;}
+.row {flex-direction: row;}
+.col {flex-direction: column;}
+.wrap {flex-wrap: wrap;}
+.justify-center {justify-content: center;}
+.align-center {align-items: center;}
+.centered {display: flex; justify-content: center; align-items: center;}
+
+#wrapper {
+    position: relative;
+    gap: calc(var(--mm) * 2);
+}
+
+#graph {
+    outline: hsl(0, 0%, 25%) solid var(--brs);
+    border-radius: var(--brs);
+    box-shadow: 12px 12px 8px hsl(0, 0%, 10%);
+    /* position: fixed; */
+}
+
+#buttonsBlock {
+    height: fit-content;
+    gap: calc(var(--mm) * 1);
+}
+
+button {
+    transition: .1s cubic-bezier(0.39, 0.575, 0.565, 1);
+    border-radius: var(--brs);
+    padding: calc(var(--mm)/2);
+    height: fit-content;
+    font-size: var(--mm);
+    box-shadow: 4px 4px 4px hsl(0, 0%, 10%);
+}
+
+button:hover {
+    background-color: cadetblue;
+}
+
+button:active {
+    translate: 0 4px;
+    background-color: darkcyan;
+}
+
+pre {
+    box-shadow: 12px 12px 8px hsl(0, 0%, 10%);
+    left: 800px;
+    width: fit-content;
+    height: fit-content;
+    padding: calc(var(--mm) * 1);
+    /* margin: calc(var(--mm) * 2); */
+    background-color: #1d1d1d;
+    outline: 6px solid #2e2d2d;
+    border-radius: var(--brs);
+}
+
+code v {color: #ba8bdd; font-weight: bold;}
+code r {color: #f92672; font-weight: bold;}
+code bk {color: #1891e6; font-weight: bold;}
+code bl {color: #5dc1d6; font-weight: bold;}
+code y {color: #ffd91b; font-weight: normal;}
+code gr {color: #c0ff41; font-weight: normal;}
+code c {color: #acacac; font-weight: normal;}

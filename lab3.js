@@ -1,4 +1,5 @@
 const canvas = new fabric.Canvas('graph');
+
 const nodeColor = '#16425f'; // Blue
 const nodeStroke = '#20515e'; // Blue
 const errorColor = '#700000'; // Red
@@ -6,27 +7,11 @@ const errorStroke = '#911414'; // Red
 const successColor = '#0e6d0e'; // Green
 const successStroke = '#28a745'; // Green
 
+const maxNewNodes = 5; // максимальное количество новых узлов
+let nodesCounter = 0; // счетчик узлов
+
 canvas.selection = false; 
 canvas.discardActiveObject(); 
-
-    // функция обрабатывающая ввод пользователя
-    // function userInputsTest() {
-    //      // nan
-    //     if (isNaN(Number(maxModuleBlock?.value))) {
-    //         if (value.indexOf('^') !== -1) {
-    //             // action
-    //         } else {
-    //             // ошибка
-    //         }
-    //     } else 
-    //         // success 
-    //
-    //     let valueMax = maxAmountBlock?.value;
-    //     if (isNaN(Number(maxAmountBlock?.value))) {
-    //         // error
-    //     } else 
-    //         // success
-    // }
 
 class GraphNode {
     marked = false;
@@ -84,7 +69,7 @@ class GraphNode {
             originY: 'center',
             hasControls: false,
             hasBorders: true,
-            // selectable: false,
+            selectable: true,
         });
 
         this.element = nodeGroup;
@@ -128,103 +113,32 @@ class GraphNode {
     }
 }
 
-(()=>{
-    function spawnNode(node, label, color = nodeColor, stroke = nodeStroke) {
-        const radius = 32;
+// рисование графа
+var InitGraph = () => 
+{
+    canvas.clear();
 
-        const circle = new fabric.Circle({
-            radius: radius,
-            fill: color,
-            stroke: stroke,
-            strokeWidth: 2,
-            originX: 'center',
-            originY: 'center',
-            selectable: false,
-            hasControls: false,
-            hasBorders: false,
-        });
+    const M = 100; // множитель координат
+    const powerSuccess = new GraphNode(3.5*M, 5*M, "Powering Number", 17, successColor, successStroke, 32, []).draw();
+    const powerError = new GraphNode(1.5*M, 5*M, "Invalid String", 16, errorColor, errorStroke, 32, []).draw();
+    
+    const power = new GraphNode(2.5*M, 4*M, "Number with Power?", 16, null, null, 32, [powerSuccess, powerError]).draw();
+    const nan2success = new GraphNode(1*M, 3*M, "Pure Number!", 17, successColor, successStroke, 32, []).draw();
+    const nan2error = new GraphNode(2.5*M, 3*M, "String", 20, '#522a5a', '#73467c', 32, [power]).draw();
+    
+    const nan1success = new GraphNode(5*M, 3*M, "Yes", 20, successColor, successStroke, 32, []).draw();
+    const nan1error = new GraphNode(3.5*M, 3*M, "No", 20, errorColor, errorStroke, 32, []).draw();
+    
+    const nan1Node = new GraphNode(4*M, 2*M, "Is M a Number?", 18, null, null, 32, [nan1error, nan1success]).draw();
+    const nan2Node = new GraphNode(2*M, 2*M, "Is N a Number?", 18, null, null, 32, [nan2error, nan2success]).draw();
+    
+    new GraphNode(3*M, 1*M, "UserInputTest", 20, '#296966', '#3f5554', 32, [nan1Node, nan2Node]).draw();
+}
+InitGraph();
 
-        const text = new fabric.Text(label, {
-            fontSize: 20,
-            fill: '#fff',
-            originX: 'center',
-            originY: 'center'
-        });
-
-        const nodeGroup = new fabric.Group([circle, text], {
-            left: node.x,
-            top: node.y,
-            originX: 'center',
-            originY: 'center',
-            hasControls: false,
-            hasBorders: true,
-            selectable: false,
-        });
-
-        canvas.add(nodeGroup);
-        return nodeGroup;
-    }
-
-    function spawnEdge(node1, node2) {
-        let local_x1; let local_y1; let local_x2; let local_y2;
-        if (node1 instanceof GraphNode && node2 instanceof GraphNode) 
-            {local_x1 = node1.getX; local_y1 = node1.getY; local_x2 = node2.getX; local_y2 = node2.getY;}
-        else {local_x1 = node1.x; local_y1 = node1.y; local_x2 = node2.x; local_y2 = node2.y;}
-
-        const line = new fabric.Line([local_x1, local_y1, local_x2, local_y2    ], {
-            stroke: '#7f8c8d',
-            strokeWidth: 6,
-            selectable: false,
-            evented: false,
-        });
-
-        canvas.add(line);
-        canvas.sendObjectToBack(line); 
-        return line;
-    }
-
-    // рисование графа
-    {
-        const M = 100; // множитель координат
-        // const entrance = { x: 3*M, y: 1*M };
-        const entranceNode = new GraphNode(3*M, 1*M, "UserInputTest", 20, null, null, 32, []).draw();
-        const exitNode = new GraphNode(5*M, 1*M, "ExitNode", 20, null, null, 32, [entranceNode]).draw();
-        
-        // const nan1 = { x: 2*M, y: 2*M };
-        // const nan11 = { x: 1*M, y: 3*M };
-        // const nan12 = { x: 2.5*M, y: 3*M };
-
-        // const power = { x: 2.5*M, y: 4*M };
-        // const power1 = { x: 1.5*M, y: 5*M };
-        // const power2 = { x: 3.5*M, y: 5*M };
-        
-        // const nan2 = { x: 4*M, y: 2*M };
-        // const nan21 = { x: 3.5*M, y: 3*M };
-        // const nan22 = { x: 5*M, y: 3*M };
-
-        // // вершины графа
-        // spawnEdge(entrance, nan1);
-        // spawnEdge(entrance, nan2);
-        // spawnEdge(nan1, nan11);
-        // spawnEdge(nan1, nan12);
-        // spawnEdge(nan12, power);
-        // spawnEdge(power, power1);
-        // spawnEdge(power, power2);
-        // spawnEdge(nan2, nan21);
-        // spawnEdge(nan2, nan22);
-
-        // // узлы графа
-        // spawnNode(entrance, "userInputsTest");
-        // spawnNode(nan1, "check M");
-        // spawnNode(nan11, "error", errorColor, errorStroke);
-        // spawnNode(nan12, "success", successColor, successStroke);
-        // spawnNode(nan2, "check N");
-        // spawnNode(nan21, "error", errorColor, errorStroke);
-        // spawnNode(nan22, "success", successColor, successStroke);
-        // spawnNode(power, "powerTest");
-        // spawnNode(power1, "success", successColor, successStroke);
-        // spawnNode(power2, "no power", errorColor, errorStroke);
-
-        // canvas.renderAll();
-    }
-})();
+{
+    document.getElementById('clearCanvas').addEventListener('click', () => {canvas.clear(); nodesCounter = 0;});
+    document.getElementById('initCanvas').addEventListener('click', InitGraph);
+    document.getElementById('createNode').addEventListener('click', ()=>{
+        nodesCounter++>=maxNewNodes?null : new GraphNode(50+Math.random()*70, 50+Math.random()*70, `${nodesCounter}`).draw();});
+}
