@@ -9,7 +9,6 @@ const successStroke = '#28a745'; // Green
 
 const maxNewNodes = 6; // максимальное количество новых узлов
 let nodesCounter = 0; // счетчик узлов
-
 canvas.selection = false; 
 canvas.discardActiveObject(); 
 
