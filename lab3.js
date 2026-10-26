@@ -165,6 +165,23 @@ class GraphNode {
         canvas.renderAll();
         return line;
     }
+
+    checkPathTo(targetNode, visited = new Set(), path=[]) {
+        // стартовая нода посещена
+        visited.add(this);
+        path.push(this);
+        // если мы уже в целевой ноде, то путь найден
+        if (this === targetNode) return path;
+
+        // рекурсия по соседним нодам
+        for (let nextNode of this.relation) {
+            if (nextNode instanceof GraphNode && !visited.has(nextNode)) {
+                const actualPath = nextNode.checkPathTo(targetNode, visited, [...path]);
+                if (actualPath) { return actualPath; }
+            }
+        }
+        return null;
+    }
 }
 
 // рисование графа
@@ -179,7 +196,7 @@ var InitGraph = () =>
     const powerSuccess = new GraphNode(3.5*M, 5*M, "Powering Number", 17, successColor, successStroke, local_nodeSize, []).draw();
     const powerError = new GraphNode(1.5*M, 5*M, "Invalid String", 16, errorColor, errorStroke, local_nodeSize, []).draw();
     
-    const power = new GraphNode(2.5*M, 4*M, "Number with Power?", 16, null, null, local_nodeSize, [powerSuccess, powerError]).draw();
+    const power = new GraphNode(2.5*M, 4*M, "with Power?", 17, null, null, local_nodeSize, [powerSuccess, powerError]).draw();
     const nan2success = new GraphNode(1*M, 3*M, "Pure Number!", 17, successColor, successStroke, local_nodeSize, []).draw();
     const nan2error = new GraphNode(2.5*M, 3*M, "String", 20, '#522a5a', '#73467c', local_nodeSize, [power]).draw();
     
@@ -229,7 +246,7 @@ let markNodesOnce = true;
         let unmarkedNodes = markNodesOnce ? newNodes.filter(node => !node.marked)
         : singleOutputMode ? [...newNodes].filter(node => node != null && node.relation.length == 0) : [...newNodes];
 
-        if(unmarkedNodes.length < 1) return;
+        if(unmarkedNodes.length <= 1) return;
         let node1 = unmarkedNodes[Math.floor(Math.random() * unmarkedNodes.length)];
         const validNode2 = unmarkedNodes.filter(node => node !== node1);
         let node2 = validNode2[Math.floor(Math.random() * validNode2.length)];
@@ -240,6 +257,32 @@ let markNodesOnce = true;
         node1.relation = Array.from(new Set([...node1.relation]));
         singleOutputMode ? ((node1)?node1.marked = true:null) : ((node2)?node2.marked = true:null);
         node1.relation = node1.relation.filter(item => item != null);
+    });
+    document.getElementById('checkPathButton').addEventListener('click', ()=>{
+        const noVertexError = document.getElementById('noVertex');
+        noVertexError.classList.add('hide');
+        const noPathError = document.getElementById('noPath');
+        noPathError.classList.add('hide');
+        const success = document.getElementById('success');
+        success.classList.add('hide');
+        const realPath = document.getElementById('realPath');
+        realPath.classList.add('hide');
+
+        let startNode = +document.getElementById('startNodeInput').value;
+        let endNode = +document.getElementById('endNodeInput').value;
+        if (startNode > 8) startNode=8;
+        if (endNode > 8) endNode=8;
+        if (startNode < 1) startNode=1;
+        if (endNode < 1) endNode=1;
+        if (newNodes[startNode-1] && newNodes[endNode-1]) {
+            const local_path = newNodes[startNode-1].checkPathTo(newNodes[endNode-1]);
+            if (local_path!=null && local_path?.length>0) {
+                success?.classList.remove('hide'); realPath?.classList.remove('hide');
+                realPath.innerHTML = `<v>${local_path.map(item=>item.label).join('<w> ⇾ </w>')}</v>`;
+            }
+            else {noPathError?.classList.remove('hide');}
+        }
+        else {noVertexError?.classList.remove('hide')}
     });
 }
 

@@ -11,6 +11,8 @@ body {
     color: white;
     padding: var(--mm);
 }
+
+.hide {display: none;}
 .bigT {font-size: 2rem;}
 .okT {font-size: 1.44rem;}
 .tT {font-size: 1.125rem;}
@@ -34,14 +36,32 @@ body {
     /* position: fixed; */
 }
 
+#firstCheck {margin-top: calc(var(--mm) * 1)}
+.checks {
+    padding: calc(var(--mm) * 0.5);
+    background-color: #1d1d1d;
+    border-radius: var(--brs);
+    margin-bottom: calc(var(--mm) * 1);
+    box-shadow: 4px 4px 4px hsl(0, 0%, 10%);
+}
+
 #buttonsBlock {
     height: fit-content;
     gap: calc(var(--mm) * 1);
 }
 
 #clearCanvas { background: hsl(0, 35%, 55%); }
-
 #initCanvas { background: hsl(320, 25%, 75%); }
+#checkPathButton { background: hsl(90, 25%, 65%); margin-left: var(--mm); }
+input {
+    width: 3ch;
+    padding: calc(var(--mm)/5);
+    background-color: #2e2d2d;
+    color: beige;
+    outline: 3px solid #3e3d3d;
+    border: none;
+}
+
 
 button {
     transition: .1s cubic-bezier(0.39, 0.575, 0.565, 1);
@@ -60,7 +80,7 @@ button:hover {
 }
 
 button:active {
-    translate: 0 4px;
+    translate: 0 2px;
     background-color: darkcyan !important;
 }
 
@@ -83,3 +103,9 @@ code bl {color: #5dc1d6; font-weight: bold;}
 code y {color: #ffd91b; font-weight: normal;}
 code gr {color: #c0ff41; font-weight: normal;}
 code c {color: #acacac; font-weight: normal;}
+
+span gr {color: #c0ff41; font-weight: normal;}
+span r {color: #f92672; font-weight: bold;}
+span v {color: #ba8bdd; font-weight: bold;}
+span y {color: #ffd91b; font-weight: normal;}
+span w {color: #cfcfce; font-weight: normal;}
