@@ -7,8 +7,9 @@ const errorStroke = '#911414'; // Red
 const successColor = '#0e6d0e'; // Green
 const successStroke = '#28a745'; // Green
 
-const maxNewNodes = 6; // максимальное количество новых узлов
+const maxNewNodes = 8; // максимальное количество новых узлов
 let nodesCounter = 0; // счетчик узлов
+
 canvas.selection = false; 
 canvas.discardActiveObject(); 
 
@@ -174,6 +175,7 @@ var InitGraph = () =>
     const M = 100; // множитель координат
     const local_nodeSize = 32;
     var randomSize = (delta) => local_nodeSize + Math.random()*delta;
+
     const powerSuccess = new GraphNode(3.5*M, 5*M, "Powering Number", 17, successColor, successStroke, local_nodeSize, []).draw();
     const powerError = new GraphNode(1.5*M, 5*M, "Invalid String", 16, errorColor, errorStroke, local_nodeSize, []).draw();
     
@@ -191,30 +193,53 @@ var InitGraph = () =>
 }
 
 let newNodes = [];
-let signleOutputMode = true;
+let singleOutputMode = true;
 // если true, то графы рисуются так,
 // чтобы у них всегда был лишь один выход,
 // иначе, может быть несколько
+let markNodesOnce = true;
+// ноды могут создавать связи в обратную сторону тоже
+// и с любыми связанными нодами
 {
-    document.getElementById('clearCanvas').addEventListener('click', () => {canvas.clear(); newNodes = []; nodesCounter = 0;});
-    document.getElementById('initCanvas').addEventListener('click', ()=>{InitGraph(); newNodes = []; nodesCounter = 0;});
+    //checkboxes
+    document.getElementById('singleOutput').addEventListener('change', ()=>{singleOutputMode = !singleOutputMode;});
+    document.getElementById('markNodesOnce').addEventListener('change', ()=>{markNodesOnce = !markNodesOnce;});
+
+    // buttons
+    document.getElementById('clearCanvas').addEventListener('click', () => {
+        canvas.clear();
+        newNodes = [];
+        nodesCounter = 0;
+        document.querySelectorAll('.hideable').forEach(e=>e.style.display = 'none');
+        document.querySelectorAll('.unhideable').forEach(e=>e.style.display = 'block');
+    });
+    document.getElementById('initCanvas').addEventListener('click', ()=>{
+        InitGraph();
+        newNodes = [];
+        nodesCounter = 0;
+        document.querySelectorAll('.hideable').forEach(e=>e.style.display = 'block');
+        document.querySelectorAll('.unhideable').forEach(e=>e.style.display = 'none');
+    });
     document.getElementById('createNode').addEventListener('click', ()=>{
         nodesCounter++>=maxNewNodes?null :
-        newNodes.push(new GraphNode(50+Math.random()*70, 50+Math.random()*70, `${nodesCounter}`, null, `hsl(${Math.random() * 360}, 25%, 50%)`).draw());
+        newNodes.push(new GraphNode(50+Math.random()*70, 50+Math.random()*70, `${nodesCounter}`, 28, `hsl(${Math.random() * 360}, 25%, 50%)`).draw());
     });
     document.getElementById('createLine').addEventListener('click', ()=>{
         if (newNodes.length < 2) return;
+        let unmarkedNodes = markNodesOnce ? newNodes.filter(node => !node.marked)
+        : singleOutputMode ? [...newNodes].filter(node => node != null && node.relation.length == 0) : [...newNodes];
 
-        const unmarkedNodes = newNodes.filter(node => !node.marked);
         if(unmarkedNodes.length < 1) return;
         let node1 = unmarkedNodes[Math.floor(Math.random() * unmarkedNodes.length)];
         const validNode2 = unmarkedNodes.filter(node => node !== node1);
         let node2 = validNode2[Math.floor(Math.random() * validNode2.length)];
         if (node2 === null || node1 === null) return;
+
         node1.line(node2);
         node1.relation.push(node2);
-        signleOutputMode ? ((node1)?node1.marked = true:null) : ((node2)?node2.marked = true:null);
-        node1.relation = node1.relation.filter(item => item !== undefined);
+        node1.relation = Array.from(new Set([...node1.relation]));
+        singleOutputMode ? ((node1)?node1.marked = true:null) : ((node2)?node2.marked = true:null);
+        node1.relation = node1.relation.filter(item => item != null);
     });
 }
 

@@ -9,10 +9,18 @@
     <script defer src="lab3.js"></script>
 </head>
 <body>
+    <a href="index.html" style="color: white;">◀ Вернуться к списку лабораторных работ</a>
     <div class="flex row wrap" id="wrapper">
-        <canvas id="graph" width="600" height="600"></canvas>
 
-        <pre><code>
+        <div id="canvasWrapper">
+            <h1>Тестовое покрытие на графах</h1>
+            <canvas id="graph" width="600" height="600"></canvas>
+        </div>
+
+        <div class="flex col" id="code">
+            <h2 style="display: none;" class="unhideable">Настройки поведения графа</h2>
+            <h3 class="hideable"">Граф был составлен на основе следующего алгоритма:</h3>
+            <pre class="hideable"><code>
 <c>// проверка на ввод пользователя</c>
 <bl>function</bl> <gr>userInputsTest</gr><y>()</y> {
 <c>// если N это строка</c>
@@ -32,6 +40,16 @@
     } <y>else</y> { <c>// success</c> }
 }
         </code></pre>
+
+        <div style="padding: calc(var(--mm) * 1);"><input type="checkbox" name="singleOutput" id="singleOutput" checked>
+        <label for="singleOutput" class="tT">У каждой вершины может быть лишь один выход.</label></div>
+
+        <div style="padding: calc(var(--mm) * 1);"><input type="checkbox" name="markNodesOnce" id="markNodesOnce" checked>
+        <label for="markNodesOnce" class="tT">По одному узлу можно пройтись лишь раз.</label></div>
+
+
+
+        </div>
 
         <div id="buttonsBlock" class="flex wrap">
             <button id="initCanvas">Стартовый граф</button>

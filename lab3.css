@@ -11,8 +11,9 @@ body {
     color: white;
     padding: var(--mm);
 }
-.bigT {font-size: 2rem}
+.bigT {font-size: 2rem;}
 .okT {font-size: 1.44rem;}
+.tT {font-size: 1.125rem;}
 .flex {display: flex;}
 .row {flex-direction: row;}
 .col {flex-direction: column;}
@@ -38,6 +39,10 @@ body {
     gap: calc(var(--mm) * 1);
 }
 
+#clearCanvas { background: hsl(0, 35%, 55%); }
+
+#initCanvas { background: hsl(320, 25%, 75%); }
+
 button {
     transition: .1s cubic-bezier(0.39, 0.575, 0.565, 1);
     border-radius: var(--brs);
@@ -46,10 +51,8 @@ button {
     font-size: var(--mm);
     background: hsl(240, 40%, 85%);
     box-shadow: 4px 4px 4px hsl(0, 0%, 10%);
-}
-
-#clearCanvas {
-    background: hsl(0, 35%, 55%);;
+    cursor: pointer;
+    user-select: none;
 }
 
 button:hover {
