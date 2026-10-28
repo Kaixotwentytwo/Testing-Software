@@ -1,11 +1,13 @@
 const canvas = new fabric.Canvas('graph');
 
-const nodeColor = '#16425f'; // Blue
-const nodeStroke = '#20515e'; // Blue
-const errorColor = '#700000'; // Red
-const errorStroke = '#911414'; // Red
-const successColor = '#0e6d0e'; // Green
-const successStroke = '#28a745'; // Green
+const nodeColor = 'hsl(204, 32%, 23%)';
+const nodeStroke = 'hsl(193, 49%, 25%)';
+const errorColor = 'hsl(0, 50%, 32%)';
+const errorStroke = 'hsl(0, 26%, 32%)';
+const additionalColor = 'hsl(310,35%,25%)';
+const additionalStroke = 'hsl(310,35%,35%)';
+const successColor = 'hsl(120, 47%, 24%)';
+const successStroke = 'hsl(134, 21%, 41%)';
 
 const maxNewNodes = 8; // максимальное количество новых узлов
 let nodesCounter = 0; // счетчик узлов
@@ -20,7 +22,7 @@ class ArrowLine extends fabric.Line {
   constructor(points, options) {
     super(points, options);
     // Сохраняем радиус ноды (по умолчанию 30, если не передан)
-    this.nodeRadius = options.nodeRadius || 30;
+    this.nodeRadius = options.nodeRadius || 32;
   }
 
   _render(ctx) {
@@ -111,6 +113,7 @@ class GraphNode {
             originX: 'center',
             originY: 'center',
             textAlign: 'center',
+            fontFamily: 'sans-serif',
         });
 
         const nodeGroup = new fabric.Group([circle, text], {
@@ -121,6 +124,7 @@ class GraphNode {
             hasControls: false,
             hasBorders: true,
             selectable: true,
+            fontFamily: 'sans-serif',
         });
 
         this.element = nodeGroup;
@@ -148,7 +152,7 @@ class GraphNode {
             strokeWidth: 3,
             selectable: false,
             evented: false,
-            nodeRadius: this.nodeSize,
+            nodeRadius: graphNode.nodeSize,
         });
 
         this.element.on('moving', () => {
@@ -191,21 +195,19 @@ var InitGraph = () =>
     canvas.clear();
 
     const M = 100; // множитель координат
-    const local_nodeSize = 32;
-    var randomSize = (delta) => local_nodeSize + Math.random()*delta;
+    var randomSize = (size, delta) => size + Math.random()*delta;
 
-    const powerSuccess = new GraphNode(3.5*M, 4*M, "Возведение\nв степень", 17, successColor, successStroke, local_nodeSize, []).draw();
-    const powerError = new GraphNode(1.5*M, 4*M, "Неверная\nстрока", 16, errorColor, errorStroke, local_nodeSize, []).draw();
+    const powerSuccess = new GraphNode(3*M, 4.5*M, "Возведение\nв степень", 17, successColor, successStroke, 56, []).draw();
+    const powerError = new GraphNode(1.5*M, 4.5*M, "Неверная\nстрока", 16, errorColor, errorStroke, 48, []).draw();
     
-    // const power = new GraphNode(2.5*M, 4*M, "with Power?", 17, null, null, local_nodeSize, []).draw();
-    const nan2success = new GraphNode(1*M, 3*M, "Число!", 17, successColor, successStroke, local_nodeSize, []).draw();
-    const nan2error = new GraphNode(2.5*M, 3*M, 'Это строка. \nИмеется ли\nсимвол "^"?', 17, '#522a5a', '#73467c', local_nodeSize, [powerSuccess, powerError]).draw();
+    const nan2success = new GraphNode(0.75*M, 3*M, "Успех", 20, successColor, successStroke, 36, []).draw();
+    const nan2error = new GraphNode(2.25*M, 3*M, 'Это строка.\nИмеется ли\nсимвол ^ ?', 15, additionalColor, additionalStroke, 56, [powerSuccess, powerError]).draw();
     
-    const nan1success = new GraphNode(5*M, 3*M, "Да", 20, successColor, successStroke, local_nodeSize, []).draw();
-    const nan1error = new GraphNode(4*M, 3*M, "Нет", 20, errorColor, errorStroke, local_nodeSize, []).draw();
+    const nan1success = new GraphNode(5.25*M, 2.75*M, "Успех", 20, successColor, successStroke, 36, []).draw();
+    const nan1error = new GraphNode(3.75*M, 2.75*M, "Ошибка", 18, errorColor, errorStroke, 40, []).draw();
     
-    const nan1Node = new GraphNode(4.5*M, 2*M, "M - число?", 18, null, null, local_nodeSize, [nan1error, nan1success]).draw();
-    const nan2Node = new GraphNode(2*M, 2*M, "N - число?", 18, null, null, local_nodeSize, [nan2error, nan2success]).draw();
+    const nan1Node = new GraphNode(4.5*M, 1.5*M, "M - число?", 19, null, null, 56, [nan1error, nan1success]).draw();
+    const nan2Node = new GraphNode(1.5*M, 1.5*M, "N - число?", 19, null, null, 56, [nan2error, nan2success]).draw();
 }
 
 let newNodes = [];
@@ -273,8 +275,8 @@ let markNodesOnce = true;
         const noEdge = document.getElementById('noEdge');
         noEdge.classList.add('hide');
 
-        let startNode = +document.getElementById('startNodeInput').value;
-        let endNode = +document.getElementById('endNodeInput').value;
+        let startNode = +document.getElementById('startNodeInput').value??1;
+        let endNode = +document.getElementById('endNodeInput').value??2;
         if (startNode > 8) startNode=8;
         if (endNode > 8) endNode=8;
         if (startNode < 1) startNode=1;

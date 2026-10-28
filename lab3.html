@@ -24,10 +24,10 @@
                 <h3 class="hideable"">Граф отражает следующий алгоритм:</h3>
                 <pre class="hideable"><code>
     <c>// проверка ввода пользователя</c>
-    <bl>function</bl> <gr>userInputsTest</gr><y>(</y><bk>user_input_1</bk>,
-                            <bk>user_input_2</bk><y>)</y> {
-    <c>    // Проверка, строка ли это</c>
-        <y>if</y> (<bk>typeof </bk><gr>user_input_1</gr> <r>==</r> <v>'string'</v>) {
+    <bl>function</bl> <gr>userInputsTest</gr><y>(</y><bk>user_input_n</bk>,
+                            <bk>user_input_m</bk><y>)</y> {
+    <c>    // Проверка, строка ли это </c>
+        <y>if</y> (<bk>typeof </bk><gr>user_input_n</gr> <r>==</r> <v>'string'</v>) {
     
             <c>// если используется символ
             // возведения в степень (10^6)</c>
@@ -41,10 +41,10 @@
             } <y>else</y> {
                 <r>throw new Error("Неверная строка")</r>
             }
-        } <y>else</y> { <c>// success</c> }
+        } <y>else</y> { <r>return </r><gr>user_input_n</gr> }
     
     <c>// Если M это тоже строка</c>
-        <y>if</y> (<bk>typoef </bk><gr>user_input_2</gr> <r>==</r> <v>'string'</v>) {
+        <y>if</y> (<bk>typoef </bk><gr>user_input_m</gr> <r>==</r> <v>'string'</v>) {
             <r>throw new Error("Ожидалось число.")</r>
         } <y>else</y> {
             <r>return </r><gr>user_input_2</gr>
@@ -71,9 +71,9 @@
         </div>
         <div id="checkPathBlock" class="unhideable hide">
             <div id="firstLine"><span class="tT">Проверить путь из </span>
-                <input class="tT input" type="number" name="startNode" id="startNodeInput" placeholder="4" max="8" min="1">
+                <input class="tT input" type="number" name="startNode" id="startNodeInput" placeholder="1" max="8" min="1">
                 <span class="tT"> в ноду </span>
-                <input class="tT input" type="number" name="endNode" id="endNodeInput" placeholder="6" max="8" min="1">
+                <input class="tT input" type="number" name="endNode" id="endNodeInput" placeholder="2" max="8" min="1">
                 <button id="checkPathButton">Проверить</button>
             </div>
             <div id="secondLine">
