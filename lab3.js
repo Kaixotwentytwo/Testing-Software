@@ -206,8 +206,6 @@ var InitGraph = () =>
     
     const nan1Node = new GraphNode(4.5*M, 2*M, "M - число?", 18, null, null, local_nodeSize, [nan1error, nan1success]).draw();
     const nan2Node = new GraphNode(2*M, 2*M, "N - число?", 18, null, null, local_nodeSize, [nan2error, nan2success]).draw();
-    
-    // const nodeEntrance = new GraphNode(3*M, 1*M, "UserInputTest", 20, '#296966', '#3f5554', local_nodeSize, [nan1Node, nan2Node]).draw();
 }
 
 let newNodes = [];
