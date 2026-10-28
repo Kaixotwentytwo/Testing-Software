@@ -109,7 +109,8 @@ class GraphNode {
             fontSize: this.textSize??16,
             fill: '#fff',
             originX: 'center',
-            originY: 'center'
+            originY: 'center',
+            textAlign: 'center',
         });
 
         const nodeGroup = new fabric.Group([circle, text], {
@@ -193,20 +194,20 @@ var InitGraph = () =>
     const local_nodeSize = 32;
     var randomSize = (delta) => local_nodeSize + Math.random()*delta;
 
-    const powerSuccess = new GraphNode(3.5*M, 5*M, "Powering Number", 17, successColor, successStroke, local_nodeSize, []).draw();
-    const powerError = new GraphNode(1.5*M, 5*M, "Invalid String", 16, errorColor, errorStroke, local_nodeSize, []).draw();
+    const powerSuccess = new GraphNode(3.5*M, 4*M, "Возведение\nв степень", 17, successColor, successStroke, local_nodeSize, []).draw();
+    const powerError = new GraphNode(1.5*M, 4*M, "Неверная\nстрока", 16, errorColor, errorStroke, local_nodeSize, []).draw();
     
-    const power = new GraphNode(2.5*M, 4*M, "with Power?", 17, null, null, local_nodeSize, [powerSuccess, powerError]).draw();
-    const nan2success = new GraphNode(1*M, 3*M, "Pure Number!", 17, successColor, successStroke, local_nodeSize, []).draw();
-    const nan2error = new GraphNode(2.5*M, 3*M, "String", 20, '#522a5a', '#73467c', local_nodeSize, [power]).draw();
+    // const power = new GraphNode(2.5*M, 4*M, "with Power?", 17, null, null, local_nodeSize, []).draw();
+    const nan2success = new GraphNode(1*M, 3*M, "Число!", 17, successColor, successStroke, local_nodeSize, []).draw();
+    const nan2error = new GraphNode(2.5*M, 3*M, 'Это строка. \nИмеется ли\nсимвол "^"?', 17, '#522a5a', '#73467c', local_nodeSize, [powerSuccess, powerError]).draw();
     
-    const nan1success = new GraphNode(5*M, 3*M, "Yes", 20, successColor, successStroke, local_nodeSize, []).draw();
-    const nan1error = new GraphNode(3.5*M, 3*M, "No", 20, errorColor, errorStroke, local_nodeSize, []).draw();
+    const nan1success = new GraphNode(5*M, 3*M, "Да", 20, successColor, successStroke, local_nodeSize, []).draw();
+    const nan1error = new GraphNode(4*M, 3*M, "Нет", 20, errorColor, errorStroke, local_nodeSize, []).draw();
     
-    const nan1Node = new GraphNode(4*M, 2*M, "Is M a Number?", 18, null, null, local_nodeSize, [nan1error, nan1success]).draw();
-    const nan2Node = new GraphNode(2*M, 2*M, "Is N a Number?", 18, null, null, local_nodeSize, [nan2error, nan2success]).draw();
+    const nan1Node = new GraphNode(4.5*M, 2*M, "M - число?", 18, null, null, local_nodeSize, [nan1error, nan1success]).draw();
+    const nan2Node = new GraphNode(2*M, 2*M, "N - число?", 18, null, null, local_nodeSize, [nan2error, nan2success]).draw();
     
-    const nodeEntrance = new GraphNode(3*M, 1*M, "UserInputTest", 20, '#296966', '#3f5554', local_nodeSize, [nan1Node, nan2Node]).draw();
+    // const nodeEntrance = new GraphNode(3*M, 1*M, "UserInputTest", 20, '#296966', '#3f5554', local_nodeSize, [nan1Node, nan2Node]).draw();
 }
 
 let newNodes = [];
@@ -223,13 +224,13 @@ let markNodesOnce = true;
     document.getElementById('markNodesOnce').addEventListener('change', ()=>{markNodesOnce = !markNodesOnce;});
 
     // buttons
-    document.getElementById('clearCanvas').addEventListener('click', () => {
+    document.querySelectorAll('.clearCanvas').forEach(item=>item.addEventListener('click', () => {
         canvas.clear();
         newNodes = [];
         nodesCounter = 0;
         document.querySelectorAll('.hideable').forEach(e=>e.style.display = 'none');
         document.querySelectorAll('.unhideable').forEach(e=>e.style.display = 'block');
-    });
+    }));
     document.getElementById('initCanvas').addEventListener('click', ()=>{
         InitGraph();
         newNodes = [];
@@ -239,10 +240,14 @@ let markNodesOnce = true;
     });
     document.getElementById('createNode').addEventListener('click', ()=>{
         nodesCounter++>=maxNewNodes?null :
-        newNodes.push(new GraphNode(50+Math.random()*70, 50+Math.random()*70, `${nodesCounter}`, 28, `hsl(${Math.random() * 360}, 25%, 50%)`).draw());
+        newNodes.push(new GraphNode(100+Math.random()*400, 100+Math.random()*400, `${nodesCounter}`, 28, `hsl(${Math.random() * 360}, 25%, 50%)`).draw());
     });
     document.getElementById('createLine').addEventListener('click', ()=>{
-        if (newNodes.length < 2) return;
+        document.getElementById('noEdge')?.classList.add('hide');
+        if (newNodes.length < 2) {
+            document.getElementById('noEdge')?.classList.remove('hide');
+            return;
+        };
         let unmarkedNodes = markNodesOnce ? newNodes.filter(node => !node.marked)
         : singleOutputMode ? [...newNodes].filter(node => node != null && node.relation.length == 0) : [...newNodes];
 
@@ -267,6 +272,8 @@ let markNodesOnce = true;
         success.classList.add('hide');
         const realPath = document.getElementById('realPath');
         realPath.classList.add('hide');
+        const noEdge = document.getElementById('noEdge');
+        noEdge.classList.add('hide');
 
         let startNode = +document.getElementById('startNodeInput').value;
         let endNode = +document.getElementById('endNodeInput').value;
