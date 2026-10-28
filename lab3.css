@@ -18,7 +18,8 @@ body {
 .tT {font-size: 1.125rem;}
 .flex {display: flex;}
 .row {flex-direction: row;}
-.col {flex-direction: column;}
+.col, .column {flex-direction: column;}
+.gap {gap: calc(var(--mm) * 1);}
 .wrap {flex-wrap: wrap;}
 .justify-center {justify-content: center;}
 .align-center {align-items: center;}
@@ -48,9 +49,11 @@ body {
 #buttonsBlock {
     height: fit-content;
     gap: calc(var(--mm) * 1);
+    margin-top: var(--mm);
 }
 
-#clearCanvas { background: hsl(0, 35%, 55%); }
+.clearCanvas:nth-child(3) { background: hsl(135, 35%, 75%); }
+.clearCanvas:nth-child(2) { background: hsl(0, 35%, 55%); }
 #initCanvas { background: hsl(320, 25%, 75%); }
 #checkPathButton { background: hsl(90, 25%, 65%); margin-left: var(--mm); }
 input {
