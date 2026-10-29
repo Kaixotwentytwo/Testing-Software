@@ -37,8 +37,22 @@ body {
     /* position: fixed; */
 }
 
+#maxVertex {
+    field-sizing: content;
+    width: 4ch;
+}
 #firstCheck {margin-top: calc(var(--mm) * 1)}
+#maxvertexblock {
+    padding: calc(var(--mm) * 0.5);
+    background-color: #1d1d1d;
+    border-radius: var(--brs);
+    margin-bottom: calc(var(--mm) * 1);
+    box-shadow: 4px 4px 4px hsl(0, 0%, 10%);
+}
 .checks {
+    min-width: 160px;
+    width: fit-content;
+    max-width: 20vw;
     padding: calc(var(--mm) * 0.5);
     background-color: #1d1d1d;
     border-radius: var(--brs);
@@ -52,16 +66,15 @@ body {
     margin-top: var(--mm);
 }
 
-#secondLine {
-    margin-top: calc(var(--mm) * 1);
-}
+#secondLine {margin-top: calc(var(--mm) * 1);}
 
 .clearCanvas:nth-child(3) { background: hsl(135, 35%, 75%); }
-.clearCanvas:nth-child(2) { background: hsl(0, 35%, 55%); }
+.clearCanvas:nth-child(2), #deleteVertex { background: hsl(0, 35%, 55%); }
 #initCanvas { background: hsl(320, 25%, 75%); }
 #checkPathButton { background: hsl(90, 25%, 65%); margin-left: var(--mm); }
-input {
-    width: 3ch;
+input[type=number] {
+    field-sizing: content;
+    min-width: 3ch;
     padding: calc(var(--mm)/5);
     background-color: #2e2d2d;
     color: beige;
