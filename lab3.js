@@ -9,8 +9,8 @@ const additionalStroke = 'hsl(310,35%,35%)';
 const successColor = 'hsl(120, 47%, 24%)';
 const successStroke = 'hsl(134, 21%, 41%)';
 
-const maxNewNodes = 8; // максимальное количество новых узлов
-let nodesCounter = 0; // счетчик узлов
+let maxNewNodes = 8; // максимальное количество новых узлов
+let newNodes = [];
 
 canvas.selection = false; 
 canvas.discardActiveObject(); 
@@ -143,6 +143,40 @@ class GraphNode {
         return this;
     }
 
+    remove(array = newNodes) {
+        // 1. Находим и удаляем все стрелки, связанные с этой нодой
+        canvas.getObjects().forEach(obj => {
+            // Проверяем, является ли объект стрелкой и связана ли она с удаляемой нодой
+            if (obj.sourceNode === this || obj.targetNode === this) {
+                canvas.remove(obj);
+                
+                // Чистим логическую связь (relation) у соседней ноды
+                const neighbor = obj.sourceNode === this ? obj.targetNode : obj.sourceNode;
+                if (neighbor?.relation) {
+                    const idx = neighbor.relation.indexOf(this);
+                    if (idx > -1) {
+                        neighbor.relation.splice(idx, 1);
+                        neighbor.marked=false;
+                    }
+                }
+            }
+        });
+
+        if (this.labelElement) { canvas.remove(this.labelElement); }
+
+        // 3. Удаляем сам элемент ноды
+        if (this.element) {
+            canvas.remove(this.element);
+            this.element = null;
+        }
+
+        // 4. Удаляем ноду из общего массива newNodes
+        const index = array.indexOf(this);
+        if (index > -1) {
+            array.splice(index, 1);
+        }
+    }
+
     line(graphNode) {
         const start = this.element.getCenterPoint();
         const end = graphNode?.element.getCenterPoint();
@@ -154,6 +188,9 @@ class GraphNode {
             evented: false,
             nodeRadius: graphNode.nodeSize,
         });
+
+        line.sourceNode = this;
+        line.targetNode = graphNode;
 
         this.element.on('moving', () => {
             line.set({ x1: this.element.left, y1: this.element.top });
@@ -210,7 +247,6 @@ var InitGraph = () =>
     const nan2Node = new GraphNode(1.5*M, 1.5*M, "N - число?", 19, null, null, 56, [nan2error, nan2success]).draw();
 }
 
-let newNodes = [];
 let singleOutputMode = true;
 // если true, то графы рисуются так,
 // чтобы у них всегда был лишь один выход,
@@ -218,32 +254,90 @@ let singleOutputMode = true;
 let markNodesOnce = true;
 // ноды могут создавать связи в обратную сторону тоже
 // и с любыми связанными нодами
+
+// скрыть сообщения об ошибках
+var hideErrors = () => {
+    const noVertexError = document.getElementById('noVertex');
+    noVertexError ? noVertexError.classList.add('hide') : null;
+
+    const noEdgeError = document.getElementById('noEdge');
+    noEdgeError ? noEdgeError.classList.add('hide') : null;
+
+    const noPathError = document.getElementById('noPath');
+    noPathError ? noPathError.classList.add('hide') : null;
+
+    const success = document.getElementById('success');
+    success ? success.classList.add('hide') : null;
+
+    const realPath = document.getElementById('realPath');
+    realPath ? realPath.classList.add('hide') : null;
+
+    const maxVertexError = document.getElementById('maxVertexes');
+    maxVertexError ? maxVertexError.classList.add('hide') : null;
+}
+
+// переключить в режим рисования либо просмотра заготовленного графа
+var toggleGraphMode = () => {
+    document.querySelectorAll('.hideable').forEach(e=>e.style.display = 'none');
+    document.querySelectorAll('.unhideable').forEach(e=>e.style.display = 'block');
+}
+
 {
     //checkboxes
-    document.getElementById('singleOutput').addEventListener('change', ()=>{singleOutputMode = !singleOutputMode;});
-    document.getElementById('markNodesOnce').addEventListener('change', ()=>{markNodesOnce = !markNodesOnce;});
+    document.getElementById('singleOutput')?.addEventListener('change', ()=>{singleOutputMode = !singleOutputMode;});
+    document.getElementById('markNodesOnce')?.addEventListener('change', ()=>{markNodesOnce = !markNodesOnce;});
+    document.getElementById('maxVertex')?.addEventListener('change', ()=>{
+        maxNewNodes = parseInt(document?.getElementById('maxVertex')?.value, 10);
+
+        //validation
+        let local_input = document.getElementById('maxVertex');
+        let local_value = +local_input?.getAttribute('max')??32;
+
+        // min
+        if (maxNewNodes < 1) {
+            maxNewNodes = 1;
+            local_input.value = 1;
+        }
+
+        // max
+        if (maxNewNodes > local_value) {
+            maxNewNodes = local_value;
+            local_input.value = local_value;
+        }
+
+        // change attributes of input elements
+        document.getElementById('endNodeInput')?.setAttribute('max', maxNewNodes);
+        document.getElementById('startNodeInput')?.setAttribute('max', maxNewNodes);
+
+        // deleting nodes off the canvas
+        if (newNodes.length > maxNewNodes) {
+            // delete last vertex
+            while (newNodes.length > maxNewNodes) {
+                newNodes.pop().remove(newNodes);
+            }
+        }
+    });
+
 
     // buttons
     document.querySelectorAll('.clearCanvas').forEach(item=>item.addEventListener('click', () => {
         canvas.clear();
         newNodes = [];
-        nodesCounter = 0;
-        document.querySelectorAll('.hideable').forEach(e=>e.style.display = 'none');
-        document.querySelectorAll('.unhideable').forEach(e=>e.style.display = 'block');
+        toggleGraphMode();
     }));
     document.getElementById('initCanvas').addEventListener('click', ()=>{
         InitGraph();
         newNodes = [];
-        nodesCounter = 0;
-        document.querySelectorAll('.hideable').forEach(e=>e.style.display = 'block');
-        document.querySelectorAll('.unhideable').forEach(e=>e.style.display = 'none');
+        toggleGraphMode();
     });
     document.getElementById('createNode').addEventListener('click', ()=>{
-        nodesCounter++>=maxNewNodes?null :
-        newNodes.push(new GraphNode(100+Math.random()*400, 100+Math.random()*400, `${nodesCounter}`, 28, `hsl(${Math.random() * 360}, 25%, 50%)`).draw());
+        hideErrors();
+        newNodes.length < maxNewNodes ?
+            newNodes.push(new GraphNode(100+Math.random()*400, 100+Math.random()*400, `${newNodes.length+1}`, 28, `hsl(${Math.random() * 360}, 25%, 50%)`).draw())
+        : document.getElementById('maxVertexes')?.classList.remove('hide'); // при превышении лимита
     });
     document.getElementById('createLine').addEventListener('click', ()=>{
-        document.getElementById('noEdge')?.classList.add('hide');
+        hideErrors();
         if (newNodes.length < 2) {
             document.getElementById('noEdge')?.classList.remove('hide');
             return;
@@ -263,33 +357,38 @@ let markNodesOnce = true;
         singleOutputMode ? ((node1)?node1.marked = true:null) : ((node2)?node2.marked = true:null);
         node1.relation = node1.relation.filter(item => item != null);
     });
-    document.getElementById('checkPathButton').addEventListener('click', ()=>{
-        const noVertexError = document.getElementById('noVertex');
-        noVertexError.classList.add('hide');
-        const noPathError = document.getElementById('noPath');
-        noPathError.classList.add('hide');
-        const success = document.getElementById('success');
-        success.classList.add('hide');
-        const realPath = document.getElementById('realPath');
-        realPath.classList.add('hide');
-        const noEdge = document.getElementById('noEdge');
-        noEdge.classList.add('hide');
+    document.getElementById('deleteVertex')?.addEventListener('click', ()=>{
+        hideErrors();
+        newNodes.pop().remove(newNodes);
+    });
+    document.getElementById('checkPathButton')?.addEventListener('click', ()=>{
+        
+        hideErrors();
 
-        let startNode = +document.getElementById('startNodeInput').value??1;
-        let endNode = +document.getElementById('endNodeInput').value??2;
-        if (startNode > 8) startNode=8;
-        if (endNode > 8) endNode=8;
-        if (startNode < 1) startNode=1;
-        if (endNode < 1) endNode=1;
-        if (newNodes[startNode-1] && newNodes[endNode-1]) {
-            const local_path = newNodes[startNode-1].checkPathTo(newNodes[endNode-1]);
-            if (local_path!=null && local_path?.length>0) {
+        // validation
+        let startNode = document.getElementById('startNodeInput');
+        let startNode_value = startNode?.value ? +startNode?.value : 1;
+        let endNode = document.getElementById('endNodeInput');
+        let endNode_value = endNode?.value ? +endNode?.value : 2;
+
+        // restrictions 
+        if (startNode_value > maxNewNodes) {startNode_value=maxNewNodes; startNode?startNode.value=maxNewNodes:null}
+        if (endNode_value > maxNewNodes) {endNode_value=maxNewNodes; endNode?endNode.value=maxNewNodes:null}
+
+        if (startNode_value < 1) {startNode_value=1; startNode?startNode.value=1:null}
+        if (endNode_value < 1) {endNode_value=1; endNode?endNode.value=1:null}
+
+        // processing
+        if (newNodes[startNode_value-1] && newNodes[endNode_value-1]) {
+            const local_path = newNodes[startNode_value-1].checkPathTo(newNodes[endNode_value-1]);
+            if (local_path!=null && local_path?.length>1) {
+                // success
                 success?.classList.remove('hide'); realPath?.classList.remove('hide');
                 realPath.innerHTML = `<v>${local_path.map(item=>item.label).join('<w> ⇾ </w>')}</v>`;
             }
-            else {noPathError?.classList.remove('hide');}
+            else {noPathError?.classList.remove('hide');} // error
         }
-        else {noVertexError?.classList.remove('hide')}
+        else {noVertexError?.classList.remove('hide')} // error
     });
 }
 
