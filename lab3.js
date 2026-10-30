@@ -135,7 +135,6 @@ class GraphNode {
                 if (rel instanceof GraphNode && rel.marked === false) {
                     this.line(rel);
                     rel.marked = true;
-                    debugger
                 }
             });
         }
