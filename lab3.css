@@ -82,6 +82,12 @@ input[type=number] {
     border: none;
 }
 
+.canvas-flash {
+    background-color: hsla(296, 0%, 30%, 0.2);
+    transition: background-color 0.1s ease-out; 
+}
+
+
 
 button {
     transition: .1s cubic-bezier(0.39, 0.575, 0.565, 1);

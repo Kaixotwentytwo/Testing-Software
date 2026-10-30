@@ -226,6 +226,12 @@ class GraphNode {
     }
 }
 
+const animateGraph = (canvasToAnimate = document.getElementById('graph')) => {
+    if (!canvasToAnimate) return;
+    canvasToAnimate.classList.add('canvas-flash');
+    setTimeout(()=>{canvasToAnimate.classList.remove('canvas-flash');}, 200);
+};
+
 // рисование графа
 var InitGraph = () => 
 {
@@ -342,9 +348,18 @@ var toggleGraphMode = () => {
     });
     document.getElementById('createNode')?.addEventListener('click', ()=>{
         hideErrors();
-        newNodes.length < maxNewNodes ?
-            newNodes.push(new GraphNode(100+Math.random()*400, 100+Math.random()*400, `${newNodes.length+1}`, 28, `hsl(${Math.random() * 360}, 25%, 50%)`).draw())
-        : document.getElementById('maxVertexes')?.removeAttribute('hidden'); // при превышении лимита
+        if (newNodes.length < maxNewNodes) {
+            let local_node = new GraphNode(
+                100+Math.random()*400,
+                100+Math.random()*400,
+                `${newNodes.length+1}`, 28,
+                `hsl(${Math.random() * 360}, 25%, 50%)`)
+                .draw();
+            newNodes.push(local_node);
+            animateGraph();
+        } else { // при превышении лимита
+            document.getElementById('maxVertexes')?.removeAttribute('hidden')
+        }; 
     });
     document.getElementById('createLine').addEventListener('click', ()=>{
         hideErrors();
@@ -360,7 +375,7 @@ var toggleGraphMode = () => {
         const validNode2 = unmarkedNodes.filter(node => node !== node1);
         let node2 = validNode2[Math.floor(Math.random() * validNode2.length)];
         if (node2 === null || node1 === null) return;
-
+        animateGraph();
         node1.line(node2);
         node1.relation.push(node2);
         node1.relation = Array.from(new Set([...node1.relation]));
@@ -396,9 +411,9 @@ var toggleGraphMode = () => {
                 success?.removeAttribute('hidden'); realPath?.removeAttribute('hidden');
                 realPath.innerHTML = `<v>${local_path.map(item=>item.label).join('<w> ⇾ </w>')}</v>`;
             }
-            else {noPathError?.removeAttribute('hidden');} // error
+            else {document.getElementById('noPath')?.removeAttribute('hidden');} // error
         }
-        else {noVertexError?.removeAttribute('hidden')} // error
+        else {document.getElementById('noVertex')?.removeAttribute('hidden')} // error
     });
 }
 
