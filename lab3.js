@@ -87,7 +87,7 @@ class GraphNode {
         this.color = color;
         this.stroke = stroke;
         this.nodeSize = nodeSize;
-        this.relation = relation;
+        this.relation = new Set(relation);
         this.element = null;
     }
 
@@ -153,10 +153,8 @@ class GraphNode {
                 // Чистим логическую связь (relation) у соседней ноды
                 const neighbor = obj.sourceNode === this ? obj.targetNode : obj.sourceNode;
                 if (neighbor?.relation) {
-                    const idx = neighbor.relation.indexOf(this);
-                    if (idx > -1) {
-                        neighbor.relation.splice(idx, 1);
-                        neighbor.marked=false;
+                    if (neighbor.relation.delete(this)) {
+                        neighbor.marked = false;
                     }
                 }
             }
@@ -368,19 +366,19 @@ var toggleGraphMode = () => {
             return;
         };
         let unmarkedNodes = markNodesOnce ? newNodes.filter(node => !node.marked)
-        : singleOutputMode ? [...newNodes].filter(node => node != null && node.relation.length == 0) : [...newNodes];
+        : singleOutputMode ? [...newNodes].filter(node => node != null && node.relation.size == 0) : [...newNodes];
 
         if(unmarkedNodes.length <= 1) return;
         let node1 = unmarkedNodes[Math.floor(Math.random() * unmarkedNodes.length)];
         const validNode2 = unmarkedNodes.filter(node => node !== node1);
         let node2 = validNode2[Math.floor(Math.random() * validNode2.length)];
-        if (node2 === null || node1 === null) return;
-        animateGraph();
-        node1.line(node2);
-        node1.relation.push(node2);
-        node1.relation = Array.from(new Set([...node1.relation]));
-        singleOutputMode ? ((node1)?node1.marked = true:null) : ((node2)?node2.marked = true:null);
-        node1.relation = node1.relation.filter(item => item != null);
+        if (node2 == null || node1 == null) return;
+        if (node1?.relation?.has(node2)===false) {
+            node1.line(node2);
+            node1?.relation?.add(node2);
+            animateGraph();
+            singleOutputMode ? ((node1)?node1.marked = true:null) : ((node2)?node2.marked = true:null);
+        }
     });
     document.getElementById('deleteVertex')?.addEventListener('click', ()=>{
         hideErrors();
