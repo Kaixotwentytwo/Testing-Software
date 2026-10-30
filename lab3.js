@@ -130,11 +130,12 @@ class GraphNode {
         this.element = nodeGroup;
         canvas.add(nodeGroup);
 
-        if (this.relation.length > 0) {
+        if (this.relation.size > 0) {
             this.relation.forEach((rel) => {
                 if (rel instanceof GraphNode && rel.marked === false) {
                     this.line(rel);
                     rel.marked = true;
+                    debugger
                 }
             });
         }
