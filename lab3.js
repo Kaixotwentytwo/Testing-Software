@@ -257,29 +257,35 @@ let markNodesOnce = true;
 
 // скрыть сообщения об ошибках
 var hideErrors = () => {
+    document.querySelectorAll('.unhideable').forEach(item=>item.removeAttribute('hidden'))
+
     const noVertexError = document.getElementById('noVertex');
-    noVertexError ? noVertexError.classList.add('hide') : null;
+    noVertexError ? noVertexError.setAttribute('hidden','') : null;
 
     const noEdgeError = document.getElementById('noEdge');
-    noEdgeError ? noEdgeError.classList.add('hide') : null;
+    noEdgeError ? noEdgeError.setAttribute('hidden','') : null;
 
     const noPathError = document.getElementById('noPath');
-    noPathError ? noPathError.classList.add('hide') : null;
+    noPathError ? noPathError.setAttribute('hidden','') : null;
 
     const success = document.getElementById('success');
-    success ? success.classList.add('hide') : null;
+    success ? success.setAttribute('hidden','') : null;
 
     const realPath = document.getElementById('realPath');
-    realPath ? realPath.classList.add('hide') : null;
+    realPath ? realPath.setAttribute('hidden','') : null;
 
     const maxVertexError = document.getElementById('maxVertexes');
-    maxVertexError ? maxVertexError.classList.add('hide') : null;
+    maxVertexError ? maxVertexError.setAttribute('hidden','') : null;
 }
 
 // переключить в режим рисования либо просмотра заготовленного графа
 var toggleGraphMode = () => {
-    document.querySelectorAll('.hideable').forEach(e=>e.style.display = 'none');
-    document.querySelectorAll('.unhideable').forEach(e=>e.style.display = 'block');
+    document.querySelectorAll('.hideable').forEach(e=>{
+        e.hasAttribute('hidden') ? e.removeAttribute('hidden') : e.setAttribute('hidden','');
+    });
+    document.querySelectorAll('.unhideable').forEach(e=>{
+        e.hasAttribute('hidden') ? e.removeAttribute('hidden') : e.setAttribute('hidden','');
+    });
 }
 
 {
@@ -320,26 +326,30 @@ var toggleGraphMode = () => {
 
 
     // buttons
-    document.querySelectorAll('.clearCanvas').forEach(item=>item.addEventListener('click', () => {
+    document.querySelectorAll('.clearCanvas')?.forEach(item=>item?.addEventListener('click', () => {
         canvas.clear();
         newNodes = [];
-        toggleGraphMode();
     }));
-    document.getElementById('initCanvas').addEventListener('click', ()=>{
+    document.getElementById('initGraph')?.addEventListener('click', ()=>{
         InitGraph();
         newNodes = [];
         toggleGraphMode();
     });
-    document.getElementById('createNode').addEventListener('click', ()=>{
+    document.getElementById('offGraph')?.addEventListener('click', ()=>{
+        canvas.clear();
+        toggleGraphMode();
+        newNodes = [];
+    });
+    document.getElementById('createNode')?.addEventListener('click', ()=>{
         hideErrors();
         newNodes.length < maxNewNodes ?
             newNodes.push(new GraphNode(100+Math.random()*400, 100+Math.random()*400, `${newNodes.length+1}`, 28, `hsl(${Math.random() * 360}, 25%, 50%)`).draw())
-        : document.getElementById('maxVertexes')?.classList.remove('hide'); // при превышении лимита
+        : document.getElementById('maxVertexes')?.removeAttribute('hidden'); // при превышении лимита
     });
     document.getElementById('createLine').addEventListener('click', ()=>{
         hideErrors();
         if (newNodes.length < 2) {
-            document.getElementById('noEdge')?.classList.remove('hide');
+            document.getElementById('noEdge')?.removeAttribute('hidden');
             return;
         };
         let unmarkedNodes = markNodesOnce ? newNodes.filter(node => !node.marked)
@@ -359,7 +369,7 @@ var toggleGraphMode = () => {
     });
     document.getElementById('deleteVertex')?.addEventListener('click', ()=>{
         hideErrors();
-        newNodes.pop().remove(newNodes);
+        newNodes.length>0 ? newNodes?.pop()?.remove(newNodes) : null;
     });
     document.getElementById('checkPathButton')?.addEventListener('click', ()=>{
         
@@ -383,12 +393,12 @@ var toggleGraphMode = () => {
             const local_path = newNodes[startNode_value-1].checkPathTo(newNodes[endNode_value-1]);
             if (local_path!=null && local_path?.length>1) {
                 // success
-                success?.classList.remove('hide'); realPath?.classList.remove('hide');
+                success?.removeAttribute('hidden'); realPath?.removeAttribute('hidden');
                 realPath.innerHTML = `<v>${local_path.map(item=>item.label).join('<w> ⇾ </w>')}</v>`;
             }
-            else {noPathError?.classList.remove('hide');} // error
+            else {noPathError?.removeAttribute('hidden');} // error
         }
-        else {noVertexError?.classList.remove('hide')} // error
+        else {noVertexError?.removeAttribute('hidden')} // error
     });
 }
 

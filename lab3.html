@@ -20,8 +20,8 @@
         <div id="codeAndProps">
             
             <div class="flex col" id="code">
-                <h2 style="display: none;" class="unhideable">Настройки поведения графа</h2>
-                <h3 class="hideable"">Граф отражает следующий алгоритм:</h3>
+                <h2 class="unhideable" hidden>Настройки поведения графа</h2>
+                <h3 class="hideable">Граф отражает следующий алгоритм:</h3>
                 <pre class="hideable"><code>
     <c>// проверка ввода пользователя</c>
     <bl>function</bl> <gr>userInputsTest</gr><y>(</y><bk>user_input_n</bk>,
@@ -53,31 +53,31 @@
                 </code></pre>
             </div>
 
-            <div class="hide">
-                <div class="unhideable flex row wrap gap" id="maxvertexblock">
+            <div class="unhideable" hidden>
+                <div class="flex row wrap gap" id="maxvertexblock">
                     <label class="tT" for="maxVertex">Максимальное кол-во вершин:</label>
                     <input class="tT" type="number" name="maxVertex" id="maxVertex" max="32" min="1" value="8" placeholder="8">
                 </div>
             </div>
         
-            <div class="checks unhideable hide" id="firstCheck"><input type="checkbox" name="singleOutput" id="singleOutput" checked>
+            <div class="checks unhideable" hidden id="firstCheck"><input type="checkbox" name="singleOutput" id="singleOutput" checked>
             <label for="singleOutput" class="tT">У каждой вершины может быть лишь один выход.</label></div>
 
-            <div class="checks unhideable hide"><input type="checkbox" name="markNodesOnce" id="markNodesOnce" checked>
+            <div class="checks unhideable" hidden><input type="checkbox" name="markNodesOnce" id="markNodesOnce" checked>
             <label for="markNodesOnce" class="tT">По одному узлу можно пройтись лишь раз.</label></div>
         </div>
     </div>
     
     <div id="buttonsBlock" class="flex col wrap">
         <div class="flex row wrap gap">
-            <button id="initCanvas" class="unhideable hide">Стартовый граф</button>
-            <button class="clearCanvas unhideable hide">Очистить поле</button>
-            <button class="clearCanvas hideable">Режим рисования графа</button>
-            <button id="createNode" class="unhideable hide">Добавить вершину</button>
-            <button id="createLine" class="unhideable hide">Добавить ребро</button>
-            <button id="deleteVertex" class="unhideable hide">Удалить последнюю вершину</button>
+            <button id="initGraph" class="unhideable" hidden>Стартовый граф</button>
+            <button class="clearCanvas unhideable" hidden>Очистить поле</button>
+            <button id="offGraph" class="hideable">Режим рисования графа</button>
+            <button id="createNode" class="unhideable" hidden>Добавить вершину</button>
+            <button id="createLine" class="unhideable" hidden>Добавить ребро</button>
+            <button id="deleteVertex" class="unhideable" hidden>Удалить последнюю вершину</button>
         </div>
-        <div id="checkPathBlock" class="unhideable hide">
+        <div id="checkPathBlock" class="unhideable" hidden>
             <div id="firstLine"><span class="tT">Проверить путь из </span>
                 <input class="tT input" type="number" name="startNode" id="startNodeInput" placeholder="1" max="8" min="1" maxlength="2">
                 <span class="tT"> в ноду </span>
@@ -85,12 +85,12 @@
                 <button id="checkPathButton">Проверить</button>
             </div>
             <div id="secondLine">
-                <span class="tT hide" id="noPath"><r>Путь не найден</r></span>
-                <span class="tT hide" id="noVertex"><r>Вершины не найдены</r></span>
-                <span class="tT hide" id="noEdge"><r>Нужно по-крайней мере две вершины, чтобы создать ребро</r></span>
-                <span class="tT hide" id="maxVertexes"><r>Превышен лимит количества вершин</r></span>
-                <span class="tT hide" id="success"><gr>Путь существует</gr></span>
-                <span class="tT hide" id="realPath"></span>
+                <span class="tT" hidden id="noPath"><r>Путь не найден</r></span>
+                <span class="tT" hidden id="noVertex"><r>Вершины не найдены</r></span>
+                <span class="tT" hidden id="noEdge"><r>Нужно по-крайней мере две вершины, чтобы создать ребро</r></span>
+                <span class="tT" hidden id="maxVertexes"><r>Превышен лимит количества вершин</r></span>
+                <span class="tT" hidden id="success"><gr>Путь существует</gr></span>
+                <span class="tT" hidden id="realPath"></span>
             </div>
         </div>
         
