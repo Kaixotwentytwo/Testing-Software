@@ -6,10 +6,13 @@
     <title>Лабораторная работа №3</title>
     <link rel="stylesheet" href="lab3.css">
     <script defer src="https://cdn.jsdelivr.net/npm/fabric@latest/dist/index.min.js"></script>
-    <script defer src="lab3.js"></script>
+    <script defer src="lab3.2.js"></script>
 </head>
 <body>
-    <a href="index.html" style="color: white;">◀ Вернуться к списку лабораторных работ</a>
+    <div class="flex column gap2">
+        <a class="tT" href="index.html" style="color: white;">◀ Вернуться к списку лабораторных работ</a>
+        <a class="tT" style="color: white;" href="КТ2.pdf" target="_blank">⇓ Открыть отчёт</a>
+    </div>
     <div class="flex row wrap" id="wrapper">
 
         <div id="canvasWrapper">
@@ -20,10 +23,12 @@
         <div id="codeAndProps">
             
             <div class="flex col" id="code">
-                <h2 class="unhideable" hidden>Настройки поведения графа</h2>
+                <h2 class="unhideable" hidden>Отрисовка графа</h2>
                 <h3 class="hideable">Граф отражает следующий алгоритм:</h3>
                 <pre class="hideable"><code>
-    <c>// проверка ввода пользователя</c>
+    <c>// проверка ввода пользователя, где</c>
+    <c>// n - модуль числа</c>
+    <c>// m - размер массива</c>
     <bl>function</bl> <gr>userInputsTest</gr><y>(</y><bk>user_input_n</bk>,
                             <bk>user_input_m</bk><y>)</y> {
     <c>    // Проверка, строка ли это </c>
@@ -36,18 +41,18 @@
                 let index = value.indexOf('^');
                 let left = value.slice(0, index);
                 let right = value.slice(index+1);
-                powered_number = (+left)**(+right);</bl>
-                <r>return </r><gr>powered_number</gr>
+                let powered_number = (+left)**(+right);</bl>
+                <v>return </v><gr>powered_number</gr>
             } <y>else</y> {
                 <r>throw new Error("Неверная строка")</r>
             }
-        } <y>else</y> { <r>return </r><gr>user_input_n</gr> }
+        } <y>else</y> { <v>return </v><gr>user_input_n</gr> }
     
-    <c>// Если M это тоже строка</c>
-        <y>if</y> (<bk>typoef </bk><gr>user_input_m</gr> <r>==</r> <v>'string'</v>) {
-            <r>throw new Error("Ожидалось число.")</r>
+        <c>// Если m это число</c>
+        <y>if</y> (<bk>typeof </bk><gr>user_input_m</gr> <r>==</r> <v>'number'</v>) {
+            <v>return </v><gr>user_input_m</gr>
         } <y>else</y> {
-            <r>return </r><gr>user_input_2</gr>
+            <r>throw new Error("Ожидалось число.")</r>
         }
     }
                 </code></pre>
@@ -56,42 +61,67 @@
             <div class="unhideable" hidden>
                 <div class="flex row wrap gap" id="maxvertexblock">
                     <label class="tT" for="maxVertex">Максимальное кол-во вершин:</label>
-                    <input class="tT" type="number" name="maxVertex" id="maxVertex" max="32" min="1" value="8" placeholder="8">
+                    <input class="lT" type="number" name="maxVertex" id="maxVertex" max="16" min="1" value="8" placeholder="8">
                 </div>
             </div>
+
+            <div class="unhideable blockedBlock" hidden="hidden">
+                <span class="tT infoText" id="nuberegd">Количество однонаправленных рёбер: <gr class="lT">3</gr></span>
+            </div>
+
+            <div class="unhideable blockedBlock" hidden="hidden">
+                <span class="tT infoText" id="nuberver">Количество вершин: <gr class="lT">3</gr></span>
+            </div>
+
+            <div class="unhideable blockedBlock" hidden="hidden">
+                <span class="tT infoText" id="nubermads">Цикломатическая сложность графа: <gr class="lT">2</gr></span>
+            </div>
         
-            <div class="checks unhideable" hidden id="firstCheck"><input type="checkbox" name="singleOutput" id="singleOutput" checked>
-            <label for="singleOutput" class="tT">У каждой вершины может быть лишь один выход.</label></div>
+            <!-- <div class="checks unhideable" hidden id="firstCheck"><input type="checkbox" name="singleOutput" id="singleOutput" checked>
+            <label for="singleOutput" class="tT">У каждой вершины может быть лишь один ВЫХОД.</label></div>
 
             <div class="checks unhideable" hidden><input type="checkbox" name="markNodesOnce" id="markNodesOnce" checked>
-            <label for="markNodesOnce" class="tT">По одному узлу можно пройтись лишь раз.</label></div>
+            <label for="markNodesOnce" class="tT">У каждой вершины может быть лишь один ВХОД.</label></div> -->
+
+            <div class="flex column">
+                <span hidden class="tT unhideable" style="margin-bottom: var(--mm);">Создание графа:</span>
+                <textarea hidden class="bigT unhideable" name="graphInput" id="graphInput" rows="32">
+1>2>3
+1>3
+</textarea>
+            </div>
+            <div id="checkPathBlock" class="unhideable" hidden>
+                <div id="firstLine"><span class="tT">Проверить путь из </span>
+                    <input class="lT input" type="text" name="startNode" id="startNodeInput" placeholder="1">
+                    <span class="tT"> в ноду </span>
+                    <input class="lT input" type="text" name="endNode" id="endNodeInput" placeholder="3">
+                    <button id="checkPathButton">Проверить</button>
+                </div>
+                <div id="secondLine">
+                    <span class="tT" hidden id="noPath"><r>Путь не найден</r></span>
+                    <span class="tT" hidden id="noVertex"><r>Вершины не найдены</r></span>
+                    <span class="tT" hidden id="noEdge"><r>Нужно по-крайней мере две вершины, чтобы создать ребро</r></span>
+                    <span class="tT" hidden id="maxVertexes"><r>Превышен лимит количества вершин</r></span>
+                    <span class="tT" hidden id="success"><gr>Путь существует</gr></span>
+                    <span class="tT" hidden id="realPath"></span>
+                </div>
+            </div>
+
+            <div id="adjacencyMatrixWrapper" class="unhideable" hidden>
+                <span class="tT">Матрица смежности</span>
+                <pre class="lT" id="adjacencyMatrix"></pre>
+            </div>
         </div>
     </div>
     
     <div id="buttonsBlock" class="flex col wrap">
         <div class="flex row wrap gap">
             <button id="initGraph" class="unhideable" hidden>Стартовый граф</button>
-            <button class="clearCanvas unhideable" hidden>Очистить поле</button>
+            <!-- <button class="clearCanvas unhideable" hidden>Очистить поле</button> -->
             <button id="offGraph" class="hideable">Режим рисования графа</button>
-            <button id="createNode" class="unhideable" hidden>Добавить вершину</button>
-            <button id="createLine" class="unhideable" hidden>Добавить ребро</button>
-            <button id="deleteVertex" class="unhideable" hidden>Удалить последнюю вершину</button>
-        </div>
-        <div id="checkPathBlock" class="unhideable" hidden>
-            <div id="firstLine"><span class="tT">Проверить путь из </span>
-                <input class="tT input" type="number" name="startNode" id="startNodeInput" placeholder="1" max="8" min="1" maxlength="2">
-                <span class="tT"> в ноду </span>
-                <input class="tT input" type="number" name="endNode" id="endNodeInput" placeholder="2" max="8" min="1" maxlength="2">
-                <button id="checkPathButton">Проверить</button>
-            </div>
-            <div id="secondLine">
-                <span class="tT" hidden id="noPath"><r>Путь не найден</r></span>
-                <span class="tT" hidden id="noVertex"><r>Вершины не найдены</r></span>
-                <span class="tT" hidden id="noEdge"><r>Нужно по-крайней мере две вершины, чтобы создать ребро</r></span>
-                <span class="tT" hidden id="maxVertexes"><r>Превышен лимит количества вершин</r></span>
-                <span class="tT" hidden id="success"><gr>Путь существует</gr></span>
-                <span class="tT" hidden id="realPath"></span>
-            </div>
+            <!-- <button id="createNode" class="unhideable" hidden>Добавить вершину</button> -->
+            <!-- <button id="createLine" class="unhideable" hidden>Добавить ребро</button> -->
+            <!-- <button id="deleteVertex" class="unhideable" hidden>Удалить последнюю вершину</button> -->
         </div>
         
     </div>
