@@ -114,7 +114,7 @@ input[type=text] {
     border-radius: var(--brs);
     outline: 2px solid aquamarine;
     padding: calc(var(--mm) / 2);
-    box-shadow: 12px 12px 8px hsl(0, 0%, 10%);
+    box-shadow: 8px 8px 8px hsl(0, 0%, 10%);
 }
 
 #checkPathBlock {
@@ -155,7 +155,8 @@ pre {
     border-radius: var(--brs);
 }
 #adjacencyMatrix {
-    box-shadow: 4px 4px 4px hsl(0, 0%, 10%);
+    box-shadow: 8px 8px 8px hsl(0, 0%, 10%),
+    inset 2px 2px 4px hsl(0, 0%, 8%);
 }
 #adjacencyMatrixWrapper {
     margin-top: var(--mm);
