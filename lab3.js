@@ -493,7 +493,7 @@ var toggleGraphMode = () => {
     
     // draw graph
     const graphInputElement = document.getElementById('graphInput');
-    let previousText = '';
+    let previousText = '1>2>3\n1>3';
     graphInputElement?.addEventListener('input', (e) => {
         edgesCount = 0;
         let inputText = e?.srcElement?.value.replaceAll(' ','')??'';
