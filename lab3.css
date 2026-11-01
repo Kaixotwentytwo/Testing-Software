@@ -14,16 +14,22 @@ body {
 
 .hide {display: none;}
 .bigT {font-size: 2rem;}
+.lT {font-size: 1.55em;}
 .okT {font-size: 1.44rem;}
 .tT {font-size: 1.125rem;}
 .flex {display: flex;}
 .row {flex-direction: row;}
 .col, .column {flex-direction: column;}
 .gap {gap: calc(var(--mm) * 1);}
+.gap2 {gap: calc(var(--mm) / 2);}
 .wrap {flex-wrap: wrap;}
 .justify-center {justify-content: center;}
 .align-center {align-items: center;}
 .centered {display: flex; justify-content: center; align-items: center;}
+
+.infoText * {
+    font-size: 1.5rem;
+}
 
 #wrapper {
     position: relative;
@@ -33,8 +39,8 @@ body {
 #graph {
     outline: hsl(0, 0%, 25%) solid var(--brs);
     border-radius: var(--brs);
-    box-shadow: 12px 12px 8px hsl(0, 0%, 10%);
-    /* position: fixed; */
+    box-shadow: 12px 12px 12px hsl(0, 0%, 10%), 
+    inset 4px 4px 8px hsl(0, 0%, 15%);
 }
 
 #maxVertex {
@@ -42,12 +48,13 @@ body {
     width: 4ch;
 }
 #firstCheck {margin-top: calc(var(--mm) * 1)}
-#maxvertexblock {
+#maxvertexblock, .blockedBlock {
     padding: calc(var(--mm) * 0.5);
     background-color: #1d1d1d;
     border-radius: var(--brs);
     margin-bottom: calc(var(--mm) * 1);
-    box-shadow: 4px 4px 4px hsl(0, 0%, 10%);
+    box-shadow: 4px 4px 4px hsl(0, 0%, 10%), 
+    inset 2px 2px 4px hsl(0, 0%, 15%);
 }
 .checks {
     min-width: 160px;
@@ -81,13 +88,38 @@ input[type=number] {
     outline: 3px solid #3e3d3d;
     border: none;
 }
+input[type=text] {
+    field-sizing: content;
+    min-width: 2ch;
+    padding: calc(var(--mm)/4);
+    background-color: #2e2d2d;
+    color: beige;
+    outline: 3px solid #3e3d3d;
+    border: none;
+}
 
 .canvas-flash {
     background-color: hsla(296, 0%, 30%, 0.2);
     transition: background-color 0.1s ease-out; 
 }
 
+#graphInput {
+    field-sizing: content;
+    max-height: calc(32ch * 2);
+    min-height: calc(var(--mm) + 1.5rem);
+    max-width: 34vw;
+    min-width: 5rem;
+    background-color: #1d1d1d;
+    color:aquamarine;
+    border-radius: var(--brs);
+    outline: 2px solid aquamarine;
+    padding: calc(var(--mm) / 2);
+    box-shadow: 12px 12px 8px hsl(0, 0%, 10%);
+}
 
+#checkPathBlock {
+    margin-top: var(--mm);
+}
 
 button {
     transition: .1s cubic-bezier(0.39, 0.575, 0.565, 1);
@@ -111,7 +143,8 @@ button:active {
 }
 
 pre {
-    box-shadow: 12px 12px 8px hsl(0, 0%, 10%);
+    box-shadow: 12px 12px 8px hsl(0, 0%, 10%), 
+    inset 4px 4px 8px hsl(0, 0%, 7%);
     left: 800px;
     width: fit-content;
     height: fit-content;
@@ -121,9 +154,16 @@ pre {
     outline: 6px solid #2e2d2d;
     border-radius: var(--brs);
 }
+#adjacencyMatrix {
+    box-shadow: 4px 4px 4px hsl(0, 0%, 10%);
+}
+#adjacencyMatrixWrapper {
+    margin-top: var(--mm);
+}
 
 code v {color: #ba8bdd; font-weight: bold;}
 code r {color: #f92672; font-weight: bold;}
+code e {color: #ff3a23; font-weight: normal;}
 code bk {color: #1891e6; font-weight: bold;}
 code bl {color: #5dc1d6; font-weight: bold;}
 code y {color: #ffd91b; font-weight: normal;}
@@ -132,6 +172,7 @@ code c {color: #acacac; font-weight: normal;}
 
 span gr {color: #c0ff41; font-weight: normal;}
 span r {color: #f92672; font-weight: bold;}
+span e {color: #ff3a23; font-weight: normal;}
 span v {color: #ba8bdd; font-weight: bold;}
 span y {color: #ffd91b; font-weight: normal;}
 span w {color: #cfcfce; font-weight: normal;}
